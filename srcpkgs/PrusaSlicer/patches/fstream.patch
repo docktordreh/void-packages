@@ -1,3 +1,5 @@
+diff --git a/src/hints/HintsToPot.cpp b/src/hints/HintsToPot.cpp
+index 4791f0612..417bfccff 100644
 --- a/src/hints/HintsToPot.cpp
 +++ b/src/hints/HintsToPot.cpp
 @@ -2,6 +2,7 @@
@@ -8,6 +10,32 @@
  #include <boost/dll.hpp>
  #include <boost/property_tree/ini_parser.hpp>
  #include <boost/nowide/fstream.hpp>
+diff --git a/src/slic3r/GUI/GUI_App.cpp b/src/slic3r/GUI/GUI_App.cpp
+index e855b6290..e0b64ef3c 100644
+--- a/src/slic3r/GUI/GUI_App.cpp
++++ b/src/slic3r/GUI/GUI_App.cpp
+@@ -18,6 +18,7 @@
+ #include <algorithm>
+ #include <iterator>
+ #include <exception>
++#include <fstream>
+ #include <cstdlib>
+ #include <regex>
+ #include <string_view>
+diff --git a/src/slic3r/GUI/HintNotification.cpp b/src/slic3r/GUI/HintNotification.cpp
+index 95583a3cd..5d89df34d 100644
+--- a/src/slic3r/GUI/HintNotification.cpp
++++ b/src/slic3r/GUI/HintNotification.cpp
+@@ -18,6 +18,7 @@
+ 
+ #include <boost/algorithm/string/replace.hpp>
+ #include <boost/filesystem.hpp>
++#include <boost/filesystem/fstream.hpp>
+ #include <boost/nowide/fstream.hpp>
+ #include <boost/log/trivial.hpp>
+ #include <boost/property_tree/ini_parser.hpp>
+diff --git a/tests/fff_print/test_data.cpp b/tests/fff_print/test_data.cpp
+index 6d8756057..75ff270f2 100644
 --- a/tests/fff_print/test_data.cpp
 +++ b/tests/fff_print/test_data.cpp
 @@ -8,6 +8,7 @@
@@ -18,40 +46,3 @@
  #include <string>
  
  #include <boost/nowide/cstdio.hpp>
---- a/src/slic3r/GUI/GUI_App.cpp
-+++ b/src/slic3r/GUI/GUI_App.cpp
-@@ -10,6 +10,7 @@
- #include <algorithm>
- #include <iterator>
- #include <exception>
-+#include <fstream>
- #include <cstdlib>
- #include <regex>
- #include <string_view>
---- a/src/slic3r/GUI/HintNotification.cpp
-+++ b/src/slic3r/GUI/HintNotification.cpp
-@@ -16,6 +16,7 @@
- 
- #include <boost/algorithm/string/replace.hpp>
- #include <boost/filesystem.hpp>
-+#include <boost/filesystem/fstream.hpp>
- #include <boost/nowide/fstream.hpp>
- #include <boost/log/trivial.hpp>
- #include <boost/property_tree/ini_parser.hpp>
---- a/src/slic3r/GUI/DesktopIntegrationDialog.cpp
-+++ b/src/slic3r/GUI/DesktopIntegrationDialog.cpp
-@@ -10,6 +10,7 @@
- #include "libslic3r/Platform.hpp"
- #include "libslic3r/Config.hpp"
- 
-+#include <fstream>
- #include <boost/filesystem.hpp>
- #include <boost/log/trivial.hpp>
- #include <boost/dll/runtime_symbol_info.hpp>
-@@ -503,4 +504,4 @@ DesktopIntegrationDialog::~DesktopIntegr
- 
- } // namespace GUI
- } // namespace Slic3r
--#endif // __linux__
-\ No newline at end of file
-+#endif // __linux__
