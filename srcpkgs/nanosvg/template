@@ -1,0 +1,11 @@
+# Template file for 'foo'
+pkgname=nanosvg
+version=20221222
+revision=1
+build_style=cmake
+short_desc="NanoSVG is a simple stupid single-header-file SVG parse."
+maintainer="name <email>"
+license="ZLIB"
+homepage="https://github.com/fltk/nanosvg"
+distfiles="http://github.com/fltk/nanosvg/archive/refs/tags/fltk_2022-12-22.tar.gz"
+checksum="5b1df945777eb76729a9cc6d2140102f5563ad55ca859692b0d6c273974f55f7"
