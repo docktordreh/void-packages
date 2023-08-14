@@ -1,0 +1,86 @@
+diff --git a/src/clipper/clipper.hpp b/src/clipper/clipper.hpp
+index c885454..1dfd80b 100644
+--- a/src/clipper/clipper.hpp
++++ b/src/clipper/clipper.hpp
+@@ -39,7 +39,7 @@
+ 
+ #include <Eigen/Geometry> 
+ 
+-#include <oneapi/tbb/scalable_allocator.h>
++#include <tbb/scalable_allocator.h>
+ 
+ #define CLIPPER_VERSION "6.2.6"
+ 
+diff --git a/src/libslic3r/JumpPointSearch.cpp b/src/libslic3r/JumpPointSearch.cpp
+index 513d84b..69e63b4 100644
+--- a/src/libslic3r/JumpPointSearch.cpp
++++ b/src/libslic3r/JumpPointSearch.cpp
+@@ -19,7 +19,7 @@
+ #include <unordered_map>
+ #include <vector>
+ 
+-#include <oneapi/tbb/scalable_allocator.h>
++#include <tbb/scalable_allocator.h>
+ 
+ //#define DEBUG_FILES
+ #ifdef DEBUG_FILES
+diff --git a/src/libslic3r/Point.hpp b/src/libslic3r/Point.hpp
+index c4b821c..392030f 100644
+--- a/src/libslic3r/Point.hpp
++++ b/src/libslic3r/Point.hpp
+@@ -9,7 +9,7 @@
+ #include <sstream>
+ #include <unordered_map>
+ 
+-#include <oneapi/tbb/scalable_allocator.h>
++#include <tbb/scalable_allocator.h>
+ 
+ 
+ #include <Eigen/Geometry> 
+diff --git a/src/libslic3r/PrintObject.cpp b/src/libslic3r/PrintObject.cpp
+index ff7906d..44630e8 100644
+--- a/src/libslic3r/PrintObject.cpp
++++ b/src/libslic3r/PrintObject.cpp
+@@ -42,9 +42,9 @@
+ #include <functional>
+ #include <limits>
+ #include <map>
+-#include <oneapi/tbb/blocked_range.h>
+-#include <oneapi/tbb/concurrent_vector.h>
+-#include <oneapi/tbb/parallel_for.h>
++#include <tbb/blocked_range.h>
++#include <tbb/concurrent_vector.h>
++#include <tbb/parallel_for.h>
+ #include <string>
+ #include <string_view>
+ #include <tuple>
+diff --git a/src/libslic3r/Support/SupportLayer.hpp b/src/libslic3r/Support/SupportLayer.hpp
+index a3c60b9..7d6a7a2 100644
+--- a/src/libslic3r/Support/SupportLayer.hpp
++++ b/src/libslic3r/Support/SupportLayer.hpp
+@@ -1,8 +1,8 @@
+ #ifndef slic3r_SupportLayer_hpp_
+ #define slic3r_SupportLayer_hpp_
+ 
+-#include <oneapi/tbb/scalable_allocator.h>
+-#include <oneapi/tbb/spin_mutex.h>
++#include <tbb/scalable_allocator.h>
++#include <tbb/spin_mutex.h>
+ // for Slic3r::deque
+ #include "../libslic3r.h"
+ #include "../ClipperUtils.hpp"
+diff --git a/src/libslic3r/SupportSpotsGenerator.cpp b/src/libslic3r/SupportSpotsGenerator.cpp
+index 8936830..3f60bda 100644
+--- a/src/libslic3r/SupportSpotsGenerator.cpp
++++ b/src/libslic3r/SupportSpotsGenerator.cpp
+@@ -27,8 +27,8 @@
+ #include <functional>
+ #include <limits>
+ #include <math.h>
+-#include <oneapi/tbb/concurrent_vector.h>
+-#include <oneapi/tbb/parallel_for.h>
++#include <tbb/concurrent_vector.h>
++#include <tbb/parallel_for.h>
+ #include <optional>
+ #include <unordered_map>
+ #include <unordered_set>
