@@ -1,13 +1,13 @@
 # Template file for 'metalog'
 pkgname=metalog
 version=20230719
-revision=1
+revision=2
 build_style=gnu-configure
 conf_files="/etc/metalog.conf"
 hostmakedepends="autoconf autoconf-archive automake pkg-config"
 makedepends="pcre2-devel"
 short_desc="Modern replacement for syslogd and klogd"
-maintainer="teldra <teldra@rotce.de>"
+maintainer="Orphaned <orphan@voidlinux.org>"
 license="GPL-2.0-only"
 homepage="https://github.com/hvisage/metalog"
 changelog="https://github.com/hvisage/metalog/blob/master/NEWS"

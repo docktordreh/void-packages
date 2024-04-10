@@ -1,6 +1,6 @@
 # Template file for 'vim'
 pkgname=vim
-version=9.0.1677
+version=9.1.0104
 revision=1
 create_wrksrc=required
 hostmakedepends="gettext glib-devel pkg-config"
@@ -15,7 +15,7 @@ maintainer="Leah Neukirchen <leah@vuxu.org>"
 license="Vim"
 homepage="https://www.vim.org"
 distfiles="https://github.com/vim/vim/archive/v${version}.tar.gz"
-checksum=c5750a1d47b514d60d59d9956e2953fb1673d1dd797bfec09c1bff721743e55c
+checksum=90721c0d3cc9ddbdce3989e8a03c6c14f9d214f3e12e062044793cbd43e10a19
 python_version=3
 
 build_options="x11 gtk3 huge"
@@ -80,7 +80,8 @@ do_configure() {
 		cd $wrksrc/vim-huge
 		./configure ${configure_args} ${args} --with-x=yes --enable-gui=no \
 			--with-features=huge --enable-perlinterp --enable-python3interp \
-			--enable-rubyinterp --enable-luainterp --enable-terminal
+			--enable-rubyinterp --enable-luainterp --enable-terminal \
+			--with-python3-stable-abi=3.12
 		if [ "$build_option_gtk3" ]; then
 
 			cd $wrksrc/gvim-huge
@@ -89,7 +90,7 @@ do_configure() {
 				--with-vim-name=gvim-huge --with-features=huge \
 				--enable-perlinterp --enable-python3interp \
 				--enable-rubyinterp --enable-luainterp \
-				--enable-terminal
+				--enable-terminal --with-python3-stable-abi=3.12
 		fi
 	fi
 }

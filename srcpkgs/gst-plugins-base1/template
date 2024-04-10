@@ -1,6 +1,6 @@
 # Template file for 'gst-plugins-base1'
 pkgname=gst-plugins-base1
-version=1.22.2
+version=1.24.0
 revision=1
 build_style=meson
 build_helper="gir"
@@ -20,8 +20,9 @@ short_desc="GStreamer Base Plug-ins (v1.x)"
 maintainer="Orphaned <orphan@voidlinux.org>"
 license="GPL-2.0-or-later, LGPL-2.0-or-later"
 homepage="https://gstreamer.freedesktop.org"
-distfiles="${homepage}/src/${pkgname/1/}/${pkgname/1/}-${version}.tar.xz"
-checksum=eb65120c4ee79b7a153c3c1972d5c0158c2151877cc51ec7725bba5749679d49
+changelog="https://gstreamer.freedesktop.org/releases/${version%.*}/#${version}"
+distfiles="https://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-${version}.tar.xz"
+checksum=f33774129c437e2207034f8927af4cf7ed8c0f006a4602b5cde2823ec6c0cc07
 
 build_options="cdparanoia gir sndio wayland"
 build_options_default="cdparanoia gir wayland"

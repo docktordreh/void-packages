@@ -1,6 +1,6 @@
 # Template file for 'bird'
 pkgname=bird
-version=2.13.1
+version=2.15.1
 revision=1
 build_style=gnu-configure
 hostmakedepends="flex"
@@ -11,7 +11,7 @@ license="GPL-2.0-or-later"
 homepage="https://bird.network.cz"
 changelog="https://gitlab.nic.cz/labs/bird/-/raw/master/NEWS"
 distfiles="https://bird.network.cz/download/bird-${version}.tar.gz"
-checksum=97bb8d57be9bc5083e2b566416d27e314162856a12ca7c77e202e467d20d4080
+checksum=48e85c622de164756c132ea77ad1a8a95cc9fd0137ffd0d882746589ce75c75d
 
 conf_files="/etc/bird.conf"
 system_accounts="_bird"

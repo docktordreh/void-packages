@@ -1,6 +1,6 @@
 # Template file for 'dasel'
 pkgname=dasel
-version=2.3.4
+version=2.7.0
 revision=1
 build_style=go
 build_helper=qemu
@@ -13,10 +13,18 @@ license="MIT"
 homepage="https://daseldocs.tomwright.me/"
 changelog="https://raw.githubusercontent.com/TomWright/dasel/master/CHANGELOG.md"
 distfiles="https://github.com/TomWright/dasel/archive/refs/tags/v${version}.tar.gz"
-checksum=7c9a2f41d02f4d1717dcf0d9fb4b977308da89c074d2abcf064adf00980e5d0d
+checksum=93546e10971ca74c3192940fe9435b48368cefa677cef8a7532b214c6d8b6c39
 
 post_install() {
 	vlicense LICENSE
+
+	mkdir manpages
+	vtargetrun ${DESTDIR}/usr/bin/dasel man -o manpages
+
+	for f in manpages/*; do
+		vman ${f}
+	done
+
 	for shell in bash fish zsh; do
 		vtargetrun ${DESTDIR}/usr/bin/dasel completion ${shell} > completions.${shell}
 		vcompletion completions.${shell} ${shell}

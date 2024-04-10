@@ -1,6 +1,6 @@
 # Template file for 'kwin'
 pkgname=kwin
-version=5.27.6
+version=5.27.11
 revision=1
 build_style=cmake
 build_helper=qemu
@@ -21,7 +21,7 @@ maintainer="John <me@johnnynator.dev>"
 license="GPL-2.0-or-later"
 homepage="https://invent.kde.org/plasma/kwin"
 distfiles="${KDE_SITE}/plasma/${version}/${pkgname}-${version}.tar.xz"
-checksum=62d5bd5e91e951c9ad8c2fc49c29485feca78db985731f0779cdaaf5052499ec
+checksum=8902b23b29bd54cd26590fe04abfe58fe334a5bf9c0dfd1f7dc5aacc4191b56f
 replaces="kwayland-server>=0"
 
 kwin-devel_package() {

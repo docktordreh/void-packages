@@ -1,7 +1,7 @@
 # Template file for 'knot-resolver'
 pkgname=knot-resolver
-version=5.6.0
-revision=2
+version=5.7.2
+revision=1
 build_style=meson
 configure_args="
  -Dclient=enabled
@@ -20,7 +20,7 @@ license="GPL-3.0-or-later"
 homepage="https://www.knot-resolver.cz/"
 changelog="https://github.com/CZ-NIC/knot-resolver/raw/master/NEWS"
 distfiles="https://secure.nic.cz/files/knot-resolver/knot-resolver-${version}.tar.xz"
-checksum=0c82ae937b685dc477fb3176098e3dc106c898b7cd83553e5bc54dccb83c80d7
+checksum=5f6a227390fcd4c2d0a8028a652b55a9d863ec7be01298fe038df1d273fb9a0f
 
 system_accounts="_knot_resolver"
 _knot_resolver_homedir="/var/cache/knot-resolver"

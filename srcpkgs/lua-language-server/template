@@ -1,6 +1,6 @@
 # Template file for 'lua-language-server'
 pkgname=lua-language-server
-version=3.6.25
+version=3.7.4
 revision=1
 hostmakedepends="ninja"
 short_desc="Lua LSP implementation written in Lua"
@@ -9,7 +9,7 @@ license="MIT"
 homepage="https://github.com/LuaLS/lua-language-server"
 changelog="https://raw.githubusercontent.com/LuaLS/lua-language-server/master/changelog.md"
 distfiles="https://github.com/LuaLS/lua-language-server/releases/download/${version}/lua-language-server-${version}-submodules.zip"
-checksum=0808ac7a3e35a246260a2818844093e5fcf7e0cc89744780f37dc26b82fff12c
+checksum=4993365d2fd34ea460d5614927c752f27294181a6304901c3198a9defced673b
 
 do_build() {
 	ninja -C 3rd/luamake -f compile/ninja/linux.ninja

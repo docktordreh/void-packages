@@ -1,7 +1,7 @@
 # Template file for 'embree'
 pkgname=embree
-version=4.2.0
-revision=1
+version=4.3.1
+revision=2
 archs="aarch64* x86_64*"
 build_style=cmake
 configure_args="-DTBB_ROOT=/usr -DEMBREE_IGNORE_CMAKE_CXX_FLAGS=OFF
@@ -15,7 +15,7 @@ license="Apache-2.0"
 homepage="https://embree.github.io/"
 changelog="https://raw.githubusercontent.com/embree/embree/master/CHANGELOG.md"
 distfiles="https://github.com/embree/embree/archive/refs/tags/v${version}.tar.gz"
-checksum=b0479ce688045d17aa63ce6223c84b1cdb5edbf00d7eda71c06b7e64e21f53a0
+checksum=824edcbb7a8cd393c5bdb7a16738487b21ecc4e1d004ac9f761e934f97bb02a4
 
 embree-devel_package() {
 	depends="${sourcepkg}>=${version}_${revision}"

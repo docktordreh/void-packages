@@ -1,6 +1,6 @@
 # Template file for 'containerd'
 pkgname=containerd
-version=1.7.3
+version=1.7.14
 revision=1
 build_style=go
 go_import_path=github.com/containerd/containerd
@@ -16,11 +16,11 @@ hostmakedepends="pkg-config go-md2man"
 makedepends="libbtrfs-devel libseccomp-devel"
 depends="runc"
 short_desc="Open and reliable container runtime"
-maintainer="Orphaned <orphan@voidlinux.org>"
+maintainer="Bnyro <bnyro@tutanota.com>"
 license="Apache-2.0"
 homepage="https://github.com/containerd/containerd"
 distfiles="https://github.com/containerd/containerd/archive/v${version}.tar.gz"
-checksum=1fd19d2c75322bdbcb01d190a18d53940a4a79d909bd61a99f9e8e2dbc57a8fe
+checksum=ae55b25fb04b45dfbbde8280b034783a48ae7c40350d17fd272be5cbf0284cf1
 make_dirs="/var/lib/containerd 0755 root root"
 
 post_build() {

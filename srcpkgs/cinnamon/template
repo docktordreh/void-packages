@@ -1,7 +1,7 @@
 # Template file for 'cinnamon'
 pkgname=cinnamon
 version=5.8.4
-revision=1
+revision=2
 build_style=meson
 build_helper="gir"
 hostmakedepends="pkg-config gettext gettext-devel glib-devel intltool xmlto
@@ -9,8 +9,7 @@ hostmakedepends="pkg-config gettext gettext-devel glib-devel intltool xmlto
 makedepends="cjs-devel clutter-gtk-devel cinnamon-menus-devel gstreamer1-devel
  muffin-devel libgnomekbd-devel polkit-devel libcanberra-devel gtk+3-devel
  startup-notification-devel pulseaudio-devel dbus-glib-devel xapps-devel
- libgnome-keyring-devel NetworkManager-devel libcroco-devel
- cinnamon-desktop-devel"
+ NetworkManager-devel libcroco-devel cinnamon-desktop-devel"
 depends="accountsservice libcaribou cinnamon-settings-daemon>=${version%.*}
  cinnamon-session>=${version%.*} muffin>=${version%.*} gsound
  cinnamon-control-center>=${version%.*} cinnamon-screensaver>=${version%.*}

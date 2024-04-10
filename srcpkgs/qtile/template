@@ -1,9 +1,9 @@
 # Template file for 'qtile'
 pkgname=qtile
-version=0.22.0
-revision=3
+version=0.24.0
+revision=2
 build_style=python3-pep517
-_wlroots=0.15
+_wlroots=0.16
 hostmakedepends="python3-setuptools_scm python3-cairocffi python3-xcffib python3-wheel
  pkg-config python3-pywlroots-${_wlroots} python3-pywayland python3-xkbcommon"
 makedepends="python3-devel libffi-devel pulseaudio-devel wlroots${_wlroots}-devel"
@@ -14,10 +14,11 @@ license="MIT"
 homepage="http://www.qtile.org/"
 changelog="https://raw.githubusercontent.com/qtile/qtile/master/CHANGELOG"
 distfiles="${PYPI_SITE}/q/qtile/qtile-${version}.tar.gz"
-checksum=ecec16cf41b6bbbc1847d0cd3f7dba68eb16fa175fbe856a229817297f605f6e
+checksum=c6d04d017c65f08c55f160c632f560efdfe092fee312fa78da1feceda044ee41
 
 post_install() {
 	vinstall resources/qtile.desktop 644 usr/share/xsessions
+	vinstall resources/qtile-wayland.desktop 644 usr/share/wayland-sessions
 	vlicense LICENSE
 }
 
@@ -26,5 +27,6 @@ qtile-wayland_package() {
 	 python3-pywlroots-${_wlroots} python3-pywayland python3-xkbcommon"
 	pkg_install() {
 		vmove ${py3_sitelib}/libqtile/backend/wayland
+		vmove usr/share/wayland-sessions
 	}
 }

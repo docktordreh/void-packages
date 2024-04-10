@@ -1,6 +1,6 @@
 # Template file for 'mmv'
 pkgname=mmv
-version=2.5
+version=2.6
 revision=1
 build_style=gnu-configure
 hostmakedepends="pkg-config"
@@ -10,4 +10,4 @@ maintainer="Leah Neukirchen <leah@vuxu.org>"
 license="GPL-3.0-or-later"
 homepage="https://github.com/rrthomas/mmv"
 distfiles="https://github.com/rrthomas/mmv/releases/download/v${version}/mmv-${version}.tar.gz"
-checksum=866d98cc87851c514a2459362cea233cf751e173136bcff61c15b39ca8a2f464
+checksum=020cb39cb177aa9e66363d73f49fe2e56aa23a3501c9cb16383f75b1ddcd4fe4

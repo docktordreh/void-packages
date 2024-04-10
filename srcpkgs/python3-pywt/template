@@ -1,10 +1,10 @@
 # Template file for 'python3-pywt'
 pkgname=python3-pywt
-version=1.4.1
-revision=2
-build_style=python3-module
-build_helper="numpy"
-hostmakedepends="python3-setuptools python3-Cython"
+version=1.6.0
+revision=1
+build_style=python3-pep517
+build_helper="meson numpy"
+hostmakedepends="python3-meson-python python3-Cython"
 makedepends="python3-devel"
 depends="python3-numpy"
 checkdepends="python3-pytest $depends"
@@ -13,10 +13,15 @@ maintainer="Andrew J. Hesford <ajh@sideband.org>"
 license="MIT"
 homepage="https://github.com/PyWavelets/pywt"
 distfiles="${homepage}/archive/v${version}.tar.gz"
-checksum=b1d0edca28998d35ec1bbc31f009b334a98b475f67b1c84f7521eb689a8607f8
+checksum=8f2cbc64ee8142bf069447bf26bc3ff0f5e332a18062c6ca0ea033f20a4fb995
 
 do_check() {
-	(cd build/lib* && python3 -m pytest pywt/tests)
+	local testdir="${wrksrc}/.xbps-testdir/$(date +%s)"
+	python3 -m installer --destdir "${testdir}" dist/*.whl
+
+	# Relative imports in tests preclude running from source tree
+	local pysite="${testdir}/${py3_sitelib}"
+	PYTHONPATH="${pysite}" pytest3 "${pysite}/pywt/tests"
 }
 
 post_install() {

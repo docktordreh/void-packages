@@ -1,6 +1,6 @@
 # Template file for 'osc'
 pkgname=osc
-version=1.2.0
+version=1.6.0
 revision=1
 build_style=python3-module
 hostmakedepends="python3-setuptools python3-cryptography python3-devel
@@ -13,4 +13,4 @@ license="GPL-2.0-or-later"
 homepage="https://github.com/openSUSE/osc"
 changelog="https://raw.githubusercontent.com/openSUSE/osc/master/NEWS"
 distfiles="https://github.com/openSUSE/osc/archive/refs/tags/${version}.tar.gz"
-checksum=0b2b094a515b340f859b417016def33f9b33a47abe4c3fad66c5dbc8b8447a7d
+checksum=7920dedfc793590829b93ddbd9dfbdbe6e2ccf471fd4f33d03117a309738b1ae

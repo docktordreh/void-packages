@@ -1,6 +1,6 @@
 # Template file for 'perl-Mozilla-CA'
 pkgname=perl-Mozilla-CA
-version=20230801
+version=20240313
 revision=1
 build_style=perl-module
 hostmakedepends="perl"
@@ -11,4 +11,4 @@ maintainer="Leah Neukirchen <leah@vuxu.org>"
 license="MPL-2.0"
 homepage="https://metacpan.org/release/Mozilla-CA"
 distfiles="${CPAN_SITE}/Mozilla/${pkgname/perl-/}-$version.tar.gz"
-checksum=8066a15bcbec7bcf691e756ea07c8b710e754c76a5e73ae20ac32298f30dd56a
+checksum=624873939e309833894f881464a95dfe74ab77cab5d557308c010487161698e7

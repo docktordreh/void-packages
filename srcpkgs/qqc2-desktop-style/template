@@ -1,6 +1,6 @@
 # Template file for 'qqc2-desktop-style'
 pkgname=qqc2-desktop-style
-version=5.108.0
+version=5.115.0
 revision=1
 build_style=cmake
 hostmakedepends="kcoreaddons qt5-qmake qt5-host-tools extra-cmake-modules"
@@ -10,7 +10,7 @@ maintainer="John <me@johnnynator.dev>"
 license="LGPL-2.0-or-later, LGPL-3.0-only, GPL-2.0-or-later"
 homepage="https://invent.kde.org/frameworks/qqc2-desktop-style"
 distfiles="${KDE_SITE}/frameworks/${version%.*}/${pkgname}-${version}.tar.xz"
-checksum=89ef4b6de9495da6bd5f4f679d75f64cdc1f714f6f0d7948805c7c80c3419bc5
+checksum=5847654e1a1c576c92ed55e43d2d4f369cfb42d8cb920b021c07960ad9b73700
 
 qqc2-desktop-style-devel_package() {
 	depends="${sourcepkg}>=${version}_${revision}"

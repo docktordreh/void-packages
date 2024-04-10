@@ -1,6 +1,6 @@
 # Template file for 'perl-Locale-Codes'
 pkgname=perl-Locale-Codes
-version=3.74
+version=3.78
 revision=1
 build_style=perl-module
 hostmakedepends="perl"
@@ -11,4 +11,4 @@ maintainer="Helmut Pozimski <helmut@pozimski.eu>"
 license="Artistic-1.0-Perl, GPL-1.0-or-later"
 homepage="https://metacpan.org/release/Locale-Codes"
 distfiles="${CPAN_SITE}/Locale/${pkgname/perl-/}-${version}.tar.gz"
-checksum=a310b4cad11d2708ab3d602724d16f5ef01362d57de57cb5e99e1221e9a16ecb
+checksum=5529c6d06556a04da1f2e0f13d1335695d04b19370858f6f051e2421687d8b0e

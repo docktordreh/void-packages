@@ -62,7 +62,6 @@ packages for XBPS, the `Void Linux` native packaging system.
 		* [kernel-hooks](#triggers_kernel_hooks)
 		* [mimedb](#triggers_mimedb)
 		* [mkdirs](#triggers_mkdirs)
-		* [openjdk-profile](#triggers_openjdk_profile)
 		* [pango-modules](#triggers_pango_module)
 		* [pycompile](#triggers_pycompile)
 		* [register-shell](#triggers_register_shell)
@@ -317,7 +316,7 @@ The following functions are defined by `xbps-src` and can be used on any templat
 	`${FILESDIR}/$service`, containing `exec vlogger -t $service -p $facility`.
 	if a second argument is not specified, the `daemon` facility is used.
 	For more information about `vlogger` and available values for the facility,
-	see [vlogger(1)](https://man.voidlinux.org/vlogger.1).
+	see [vlogger(8)](https://man.voidlinux.org/vlogger.8).
 
 - *vsed()* `vsed -i <file> -e <regex>`
 
@@ -335,6 +334,29 @@ The following functions are defined by `xbps-src` and can be used on any templat
 	and with the appropriate filename for `shell`. If `command` isn't specified,
 	it will default to `pkgname`. The `shell` argument can be one of `bash`,
 	`fish` or `zsh`.
+
+- *vextract()* `[-C <target directory>] [--no-strip-components|--strip-components=<n>] <file>`
+
+	Extracts `file` to `target directory` with `n` directory components stripped. If
+	`target directory` not specified, defaults to the working directory. If
+	`--strip-components` or `--no-strip-components` is not specified, defaults to
+	`--strip-components=1`.
+
+- *vsrcextract()* `[-C <target directory>] [--no-strip-components|--strip-components=<n>] <file>`
+
+	Extracts `$XBPS_SRCDISTDIR/$pkgname-$version/<file>` to `target directory`
+	with `n` directory components stripped. If `target directory` not specified,
+	defaults to the working directory. If `--strip-components` or `--no-strip-components`
+	is not specified, defaults to `--strip-components=1`.
+
+	This is useful when used in conjunction with `skip_extraction` and for submodule distfiles.
+
+- *vsrccopy()* `<file>... <target>`
+
+	Copies `file`s from `$XBPS_SRCDISTDIR/$pkgname-$version/` into the `target` directory,
+	creating `target` if it does not exist.
+
+	This is useful when used in conjunction with `skip_extraction`.
 
 > Shell wildcards must be properly quoted, Example: `vmove "usr/lib/*.a"`.
 
@@ -441,8 +463,8 @@ the generated `binary packages` have been modified.
 - `version` A string with the package version. Must not contain dashes or underscore
 and at least one digit is required. Shell's variable substitution usage is not allowed.
 
-Neither `pkgname` or `version` should contain special characters which make it
-necessary to quote them, so they shouldn't be quoted in the template.
+`pkgname` and `version` are forbidden to contain special characters. Hence, they don't
+need to be quoted, and by convention, they shouldn't be.
 
 <a id="optional_vars"></a>
 #### Optional variables
@@ -859,12 +881,14 @@ update multiple packages in a second branch without polluting his local reposito
 The second way to define a repository is by setting the `repository` variable in
 a template. This way the maintainer can define repositories for a specific
 package or a group of packages. This is currently used to distinguish between
-closed source packages, which are put in the `nonfree` repository and other
-packages which are at the root-repository.
+certain classes of packages.
 
 The following repository names are valid:
 
-* `nonfree`: Repository for closed source packages.
+* `bootstrap`: Repository for xbps-src-specific packages.
+* `debug`: Repository for packages containing debug symbols. In almost all cases,
+  these packages are generated automatically.
+* `nonfree`: Repository for packages that are closed source or have nonfree licenses.
 
 <a id="updates"></a>
 ### Checking for new upstream releases
@@ -904,6 +928,10 @@ in url. Defaults to `(|v|$pkgname)[-_.]*`.
 - `vdsuffix` is a perl-compatible regular expression matching
 part that follows numeric part of version directory
 in url. Defaults to `(|\.x)`.
+
+- `disabled` can be set to disable update checking for the package,
+in cases where checking for updates is impossible or does not make sense.
+This should be set to a string describing why it is disabled.
 
 <a id="patches"></a>
 ### Handling patches
@@ -1064,8 +1092,7 @@ suitable environment for working with certain sets of packages.
 
 The current list of available `build_helper` scripts is the following:
 
-- `rust` specifies environment variables required for cross-compiling crates via cargo and
-for compiling cargo -sys crates.
+- `cmake-wxWidgets-gtk3` sets the `WX_CONFIG` variable which is used by FindwxWidgets.cmake
 
 - `gir` specifies dependencies for native and cross builds to deal with
 GObject Introspection. The following variables may be set in the template to handle
@@ -1074,6 +1101,20 @@ additional paths to be searched when linking target binaries to be introspected.
 `GIR_EXTRA_OPTIONS` defines additional options for the `g-ir-scanner-qemuwrapper` calling
 `qemu-<target_arch>-static` when running the target binary. You can for example specify
 `GIR_EXTRA_OPTIONS="-strace"` to see a trace of what happens when running that binary.
+
+- `meson` creates a cross file, `${XBPS_WRAPPERDIR}/meson/xbps_meson.cross`, which configures
+meson for cross builds. This is particularly useful for building packages that wrap meson
+invocations (e.g., `python3-pep517` packages that use a meson backend) and is added by default
+for packages that use the `meson` build style.
+
+- `numpy` configures the environment for cross-compilation of python packages that provide
+compiled extensions linking to NumPy C libraries. If the `meson` build helper is also
+configured, a secondary cross file, `${XBPS_WRAPPERDIR}/meson/xbps_numpy.cross`, will be
+written to inform meson where common NumPy components may be found.
+
+- `python3` configures the cross-build environment to use Python libraries, header files, and
+interpreter configurations in the target root. The `python3` helper is added by default for
+packages that use the `python3-module` or `python3-pep517` build styles.
 
 - `qemu` sets additional variables for the `cmake` and `meson` build styles to allow
 executing cross-compiled binaries inside qemu.
@@ -1088,7 +1129,9 @@ This aims to fix cross-builds for when the build-style is mixed: e.g. when in a
 `gnu-configure` style the configure script calls `qmake` or a `Makefile` in
 `gnu-makefile` style, respectively.
 
-- `cmake-wxWidgets-gtk3` sets the `WX_CONFIG` variable which is used by FindwxWidgets.cmake
+- `rust` specifies environment variables required for cross-compiling crates via cargo and
+for compiling cargo -sys crates. This helper is added by default for packages that use the
+`cargo` build style.
 
 <a id="functions"></a>
 ### Functions
@@ -1319,6 +1362,8 @@ Ideally those files should not exceed 80 chars per line.
 
 subpackages can also have their own `INSTALL.msg` and `REMOVE.msg` files, simply create them
 as `srcpkgs/<pkgname>/<subpkg>.INSTALL.msg` or `srcpkgs/<pkgname>/<subpkg>.REMOVE.msg` respectively.
+
+This should only be used for critical messages, like warning users of breaking changes.
 
 <a id="runtime_account_creation"></a>
 ### Creating system accounts/groups at runtime
@@ -1993,13 +2038,6 @@ During removal it will delete the directory using `rmdir`.
 To include this trigger use the `make_dirs` variable, as the trigger won't do anything
 unless it is defined.
 
-<a id="triggers_openjdk_profile"></a>
-#### openjdk-profile
-
-The openjdk-profile trigger is responsible for creating an entry in /etc/profile.d that
-sets the `JAVA_HOME` environment variable to the currently-selected alternative for
-`/usr/bin/java` on installation. This trigger must be manually requested.
-
 <a id="triggers_pango_module"></a>
 #### pango-modules
 
@@ -2144,7 +2182,7 @@ otherwise the `debug` packages won't have debugging symbols.
 <a id="contributing"></a>
 ### Contributing via git
 
-To get started, [fork](https://help.github.com/articles/fork-a-repo) the void-linux `void-packages` git repository on GitHub and clone it:
+To get started, [fork](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo) the void-linux `void-packages` git repository on GitHub and clone it:
 
     $ git clone git@github.com:<user>/void-packages.git
 

@@ -1,15 +1,15 @@
 # Template file for 'pcmanfm-qt'
 pkgname=pcmanfm-qt
-version=1.3.0
+version=1.4.1
 revision=1
 build_style=cmake
 hostmakedepends="lxqt-build-tools qt5-qmake qt5-host-tools libfm-qt-devel perl"
-makedepends="qt5-tools-devel qt5-x11extras-devel libfm-qt-devel"
-depends="qt5-translations"
+makedepends="qt5-tools-devel qt5-x11extras-devel libfm-qt-devel lxqt-menu-data-devel"
+depends="qt5-translations lxqt-menu-data"
 short_desc="Qt port of PCManFM"
 maintainer="Helmut Pozimski <helmut@pozimski.eu>"
 license="GPL-2.0-or-later"
 homepage="https://lxqt-project.org"
 distfiles="https://github.com/lxqt/pcmanfm-qt/archive/${version}.tar.gz"
-checksum=093c7d0d1d8a339fc91df1df055996b63ad200954fd40477f149365e0a732c7c
+checksum=9b30d736cd940e37848638eb185a8eefe85742d520f2e65ca1b1a6af07054fd5
 replaces="lxqt-common>=0"
