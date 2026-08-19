@@ -1,129 +1,64 @@
-<div align="center" markdown="1">
-  <a>
-  <!-- <img width="600" height="120" alt="void-linux" src="https://github.com/sofijacom/void-package/blob/main/img/void-linux.gif" /> -->
-  <img width="350" height="auto" alt="void-linux" src="https://github.com/sofijacom/void-package/blob/main/img/void-linux-1.png?raw=true" />
-  </a>
-<!-- # 【 Void Linux Software Repository 】 -->
-<!-- # 【 Unofficial package repository for Void Linux 】 -->
+# docktordreh/void-packages
 
-##### ⮞⮞【 `Unofficial package repository` 】⮜⮜
+Unofficial package repository for **Void Linux**, focused on improving package availability for **aarch64**.
 
-[![Platform](https://img.shields.io/badge/platform-Void%20Linux-478061?logo=linux&colorA=363a4f)](#)
-[![x85_64-glibc](https://img.shields.io/badge/x86__64-glibc-478061?style=badge&colorA=363a4f)](#)
+Current scope:
 
-[![Build](https://img.shields.io/github/actions/workflow/status/sofijacom/void-package/build-workflows.yml?style=badge&label=BUILD&logo=githubactions&logoColor=white&colorA=363a4f)](https://github.com/sofijacom/void-package/actions)
-[![Build](https://img.shields.io/github/actions/workflow/status/sofijacom/void-package/update-template.yml?style=badge&label=UPDATE-TEMPLATE&logo=githubactions&logoColor=white&colorA=363a4f)](https://github.com/sofijacom/void-package/actions)
-[![Updates](https://img.shields.io/github/actions/workflow/status/sofijacom/void-package/update-template.yml?style=badge&label=AUTO-UPDATE&logo=github&logoColor=white&colorA=363a4f)](https://github.com/sofijacom/void-package/actions)
+* `zen-browser` for `aarch64` and `x86_64`
+* `linux-virt`, a VM guest optimized kernel, coming for `aarch64` and `x86_64`
 
-[![GitHub](https://img.shields.io/github/license/sofijacom/void-package?style=badge&label=License&colorA=363a4f&colorB=purple&logo=gitbook)](#)
-[![GitHub contributors](https://img.shields.io/github/contributors/sofijacom/void-package?style=badge&colorA=363a4f&colorB=purple&logo=github&label=Contributors)](#)
-[![GitHub release (with filter)](https://img.shields.io/github/v/release/sofijacom/void-package?style=badge&logo=github&label=Release&colorA=363a4f&colorB=purple)](https://github.com/sofijacom/void-package/releases/)
-[![GitHub issues](https://img.shields.io/github/issues-raw/sofijacom/void-package?style=badge&label=Open%20Issues&logo=github&colorA=363a4f&colorB=purple)](#)
-[![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/sofijacom/void-package?style=badge&label=Closed%20Issues&logo=github&colorA=363a4f&colorB=purple)](#)
-[![GitHub last commit (branch)](https://img.shields.io/github/last-commit/sofijacom/void-package/main?style=badge&label=Last%20Commit&logo=github&colorA=363a4f&colorB=purple)](#)
+The main motivation for this repository is to provide useful aarch64 packages that are otherwise missing or difficult to obtain on Void Linux.
 
-</div>
+[![Void Linux](https://img.shields.io/badge/Void_Linux-packages-478061?logo=linux)](https://voidlinux.org/)
+[![Build](https://img.shields.io/github/actions/workflow/status/docktordreh/void-packages/build-workflows.yml?label=build\&logo=githubactions)](https://github.com/docktordreh/void-packages/actions)
+[![Release](https://img.shields.io/github/v/release/docktordreh/void-packages?logo=github)](https://github.com/docktordreh/void-packages/releases)
 
-<br />
+## Repository
 
-> [!NOTE]
->>  _How to use_
->>> _type in the terminal_
+Add the repository:
 
-```shell
-printf "repository=https://github.com/sofijacom/void-package/releases/latest/download/" | sudo tee /etc/xbps.d/sofijacom-void-repository.conf
+```sh
+printf '%s\n' \
+  'repository=https://github.com/docktordreh/void-packages/releases/latest/download/' \
+  | sudo tee /etc/xbps.d/docktordreh.conf
 ```
 
-> [!IMPORTANT]
-> 
-> _Then type in the terminal `sudo xbps-install -S` and accept the fingerprint (Y)_
+Then synchronize XBPS:
 
-```shell
+```sh
 sudo xbps-install -S
 ```
 
-# 📦 Available packages
+On first use, verify and accept the repository signing key fingerprint.
 
-| package | source | automatic update |
-|:--------|:-------|:-----------------|
-| Brave-browser ( stable )            | https://www.brave.com/                            | ✔️ |
-| Brave-origin ( stable )             | https://www.brave.com/                            | ✔️ |
-| Brave-origin ( beta )               | https://www.brave.com/                            | ✔️ |
-| Calamares ( Graphical installer )   | https://calamares.io                              | ✔️ |
-| Conky-manager2                      | https://github.com/zcot/conky-manager2            | 🔐 | 
-| GitHub-desktop                      | https://github.com/shiftkey/desktop               | ✔️ |
-| Google-chrome ( stable )            | https://www.google.com/chrome/                    | ✔️ |
-| Gtk3dialog ( GTK+ 3, VTE )          | https://github.com/puppylinux-woof-CE/gtkdialog   | ✔️ |
-| Hardinfo2                           | https://github.com/hardinfo2/hardinfo2            | ✔️ |
-| Helium-browser                      | https://helium.computer/                          | ✔️ |
-| LibreWolf ( Web browser )           | https://librewolf.net/                            | ✔️ |
-| ly                                  | https://codeberg.org/fairyglade/ly                | ✔️ |
-| Microsoft-edge ( Web browser )      | https://github.com/NDViet/microsoft-edge-stable   | ✔️ |
-| Mullvad-browser                     | https://github.com/mullvad/mullvad-browser        | ✔️ |
-| Mullvad VPN                         | https://github.com/mullvad/mullvadvpn-app/        | ✔️ |
-| nixie-clock                         | https://github.com/sofijacom/nixie-clock          | 🔐 |
-| Osmo + dependency (libgringotts)    | https://sourceforge.net/projects/osmo-pim/files/  | 🔐 |
-| Palemoon ( browser )                | https://www.palemoon.org/                         | ✔️ |
-| perl-Class-Mix                      | https://metacpan.org/pod/Class::Mix               | ✔️ |
-| perl-Crypt-Eksblowfish              | https://metacpan.org/pod/Crypt::Eksblowfish       | ✔️ |
-| perl-Device-SerialPort              | https://metacpan.org/pod/Device::SerialPort       | ✔️ |
-| perl-Net-MQTT                       | https://metacpan.org/pod/Net::MQTT                | ✔️ |
-| perl-Net-WebSocket-Server           | https://metacpan.org/pod/Net::WebSocket::Server   | ✔️ |
-| perl-Number-Bytes-Human             | https://metacpan.org/pod/Number::Bytes::Human     | ✔️ |
-| perl-Protocol-WebSocket             | https://metacpan.org/pod/perl::Protocol::WebSocket| ✔️ |
-| perl-Sys-MemInfo                    | https://metacpan.org/pod/perl::Sys::MemInfo       | ✔️ |
-| perl-Sys-Mmap                       | https://metacpan.org/pod/perl::Sys::Mmap          | ✔️ |
-| Pup-volume-monitor                  | https://github.com/01micko/pup-volume-monitor     | 🔐 |
-| SeaMonkey ( Web-browser )           | https://www.seamonkey-project.org/                | ✔️ |
-| SmartGit                            | https://www.smartgit.dev/                         | ✔️ |
-| Waterfox-browser                    | https://www.waterfox.net/                         | ✔️ |
-| Yandex-browser ( stable )           | https://repo.yandex.ru/                           | ✔️ |
-| Zen-browser ( stable )              | https://www.zen-browser.app/                      | ✔️ |
-| Zoneminder                          | https://github.com/ZoneMinder/zoneminder/         | ✔️ |
+## Packages
 
-### TODO
+| Package              | Architectures       | Description                                  |
+| -------------------- | ------------------- | -------------------------------------------- |
+| `zen-browser`        | `aarch64`, `x86_64` | Zen Browser binary package                   |
+| `linux-virt`         | `aarch64`, `x86_64` | VM guest optimized Linux kernel, coming soon |
+| `linux-virt-headers` | `aarch64`, `x86_64` | Matching kernel headers, coming soon         |
 
-- [x] Build and package void-package once a new version is released via GitHub Actions
-- ▷
+### Zen Browser
 
-<br>
- 
-<details>
-<summary><b>repo-key ► Click to expand</b></summary>
-<br/>
-  
-```
-sudo mkdir -p /var/db/xbps/keys
-sudo wget -O /var/db/xbps/keys/00:ca:42:57:c9:c0:9a:ec:94:b4:7d:97:e5:a9:aa:1e.plist \
-  https://github.com/sofijacom/void-package/raw/refs/heads/main/repo-keys/x86_64/00:ca:42:57:c9:c0:9a:ec:94:b4:7d:97:e5:a9:aa:1e.plist
-```
-  
-> repo-key `00:ca:42:57:c9:c0:9a:ec:94:b4:7d:97:e5:a9:aa:1e.plist`
+Install with:
 
-```txt
-
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-	<key>public-key</key>
-	<data>LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUF6aFR1SkVjalBFZzZaUnNGbThtLwpaRnY0RWoyNUZVZzRZR3JQZlI3cWdaaGs5MExWd1hnTnVBQVl2TXFrSmpDd1dueEdYZVNzWUgyNFpSaFhiSHNvCm1DOGJFSDBOWkpmWGRYWFl3Rjg1dGl3b0RGRkpxOE0wN3daT0JsVmI4YXhkRm96UElpWXlRUEMxN1BwTjg0UksKS3NzZkJtQmt0dDUwbGptUWpmQW5lV21tZzF5VTRlSWZvR3AvamgrWW9TUGkyTzZTQi9ZVVJpZnNFYmlUK1RoMQpGdmpZTWhCb1VmQ2NGaGlIb3hDWXJOREhNOURSM21lUVI5ZkFuTEhKNEdXclhoMy84TjFhTngwcnZXckdSNDlJCkJrenNJdjErL2hHNzdyVG54Z3VPNGx0QVZ0QnljdVhRa2ZoWlpzMCtNSXphMzZpaVJja1lVRVVzYVFtQkJnUXMKaHdJREFRQUIKLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg==</data>
-	<key>public-key-size</key>
-	<integer>2048</integer>
-	<key>signature-by</key>
-	<string>void-package-github-actions</string>
-</dict>
-</plist>
+```sh
+sudo xbps-install zen-browser
 ```
 
-</details>
+The package uses the upstream Zen Browser binaries for the respective architecture.
 
-<p align="center">
-  <a>
-	  <img src="https://raw.githubusercontent.com/catppuccin/catppuccin/main/assets/footers/gray0_ctp_on_line.svg?sanitize=true" />
-  </a>		  
-</p>
+### linux-virt
 
-<p align="center">
-	<a href="https://github.com/sofijacom/void-package/blob/main/LICENSE"><img src="https://img.shields.io/static/v1.svg?style=for-the-badge&logo=gitbook&label=License&message=MIT&logoColor=EDE9FE&colorA=363a4f&colorB=b7bdf8"/></a>
-</p>
+`linux-virt` is intended as a lean Void kernel flavor for virtual machine guests.
+
+It keeps general purpose guest and VirtIO functionality while removing unnecessary physical hardware support.
+
+## Automation
+
+GitHub Actions handles package builds, signing, releases, and automatic updates where supported.
+
+## Disclaimer
+
+This is an unofficial repository and is not affiliated with the Void Linux project.
