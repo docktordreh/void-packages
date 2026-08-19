@@ -21,21 +21,29 @@ fi
 echo "Update found: $CURRENT_VERSION -> $LATEST_VERSION"
 
 URL_X86="https://github.com/$REPO/releases/download/${LATEST_VERSION}/zen.linux-x86_64.tar.xz"
+URL_AARCH64="https://github.com/$REPO/releases/download/${LATEST_VERSION}/zen.linux-aarch64.tar.xz"
 
-echo "Calculating checksum..."
+echo "Calculating checksums..."
 CHK_X86=$(curl -L -s "$URL_X86" | sha256sum | awk '{print $1}')
+CHK_AARCH64=$(curl -L -s "$URL_AARCH64" | sha256sum | awk '{print $1}')
 
-if [ -z "$CHK_X86" ]; then
-    echo "Error: Failed to fetch checksum."
+if [ -z "$CHK_X86" ] || [ -z "$CHK_AARCH64" ]; then
+    echo "Error: Failed to fetch checksums."
     exit 1
 fi
 
-echo "Checksum: $CHK_X86"
+echo "Checksums: x86_64=$CHK_X86 aarch64=$CHK_AARCH64"
 
 sed -i "s/^version=.*/version=$LATEST_VERSION/" "$TPL"
 sed -i "s/^revision=.*/revision=1/" "$TPL"
-sed -i "s/^checksum=.*/checksum=\"$CHK_X86\"/" "$TPL"
+
+# Template structure: if (aarch64) { checksum } else { checksum }
+# First checksum line = aarch64, second = x86_64
+awk -v chk_aarch="$CHK_AARCH64" -v chk_x86="$CHK_X86" '
+  /^checksum=/ && n_checksums == 0 { $0="checksum=\"" chk_aarch "\""; n_checksums++ }
+  /^checksum=/ && n_checksums == 1 { $0="checksum=\"" chk_x86 "\""; n_checksums++ }
+  { print }
+' "$TPL" > "${TPL}.tmp" && mv "${TPL}.tmp" "$TPL"
 
 echo "NEW_VERSION=$LATEST_VERSION" >> $GITHUB_ENV
 echo "### Done! zen-browser updated to $LATEST_VERSION"
-
