@@ -1,8 +1,0 @@
-case "${ACTION}" in
-pre)
-	;;
-post)
-    # Start the Hardinfo2 service
-    ln -s /etc/sv/hardinfo2 /var/service
-	;;
-esac

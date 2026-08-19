@@ -1,39 +1,40 @@
 # Template file for 'zen-browser'
 
 pkgname=zen-browser
-version=1.21.14b
+version=1.21.15b
 revision=1
-archs="x86_64"
+archs="x86_64 aarch64"
 hostmakedepends="binutils tar xz curl"
 short_desc="Experience tranquillity while browsing the web without people tracking you!"
-maintainer="Sofiya <Sofiya@v.org"
+maintainer="Sofiya <sofiya@v.org>"
 license="MPL-2.0"
 homepage="https://www.zen-browser.app/"
 changelog="https://github.com/zen-browser/desktop/releases"
+
+if [ "$XBPS_TARGET_ARCH" = "aarch64" ]; then
+distfiles="https://github.com/zen-browser/desktop/releases/download/${version}/zen.linux-aarch64.tar.xz"
+checksum="73a609b954e7dcef8dc49b1efc9c13b688ecfa24ba1b3f39ad653e9324b889cf"
+else
 distfiles="https://github.com/zen-browser/desktop/releases/download/${version}/zen.linux-x86_64.tar.xz"
-checksum="b3a5bb782d9403dce8cf4cde3d61daed64548568058862eaeb9e045c212b7ee0"
+checksum="2eaea664b840067ca0ace623bd4f4548fae98f46a98e2ddbdfdcb9253b674bbf"
+fi
 
 do_install() {
   install -dm755 "${DESTDIR}/opt/${pkgname}" "${DESTDIR}/usr/bin" "${DESTDIR}/usr/share/applications" "${DESTDIR}/usr/share/pixmaps"
 
   vinstall "${FILESDIR}/zen.desktop" 0644 usr/share/applications/
-
   vcopy * "opt/${pkgname}"
-
   ln -sf "/opt/${pkgname}/zen" "${DESTDIR}/usr/bin/zen"
 
-  # install policies files
   install -dm755 "${DESTDIR}/opt/${pkgname}/distribution"
   vinstall ${FILESDIR}/policies.json 644 "opt/${pkgname}/distribution/"
 
-  # Follow https://wiki.freepascal.org/Debian_package_structure#usr/share/pixmaps_directory and https://wiki.freepascal.org/Debian_package_structure#usr/share/hicolor_directory
   vinstall browser/chrome/icons/default/default48.png 0644 usr/share/pixmaps zen-browser.png
   for size in 16 32 48 64 128; do
     install -d ${DESTDIR}/usr/share/icons/hicolor/${size}x${size}/apps
     vinstall browser/chrome/icons/default/default${size}.png 0644 usr/share/icons/hicolor/${size}x${size}/apps zen-browser.png
   done
 
-  # using system dictionary
   ln -Ts /usr/share/hunspell "${DESTDIR}/opt/${pkgname}/dictionaries"
   ln -Ts /usr/share/hyphen "${DESTDIR}/opt/${pkgname}/hyphenation"
   ln -sf /usr/lib/libnssckbi.so "${DESTDIR}/opt/${pkgname}/libnssckbi.so"
