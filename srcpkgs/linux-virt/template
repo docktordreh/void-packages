@@ -1,15 +1,16 @@
 # Template file for 'linux-virt'
+
 pkgname=linux-virt
 version=6.18
 revision=1
 metapackage=yes
+
 depends="linux-virt${version} linux-base"
+
 short_desc="VM-optimized Linux kernel meta package"
 maintainer="Valentin Lechner <valentin_lechner@tutanota.de>"
 license="Public Domain"
-homepage="http://www.voidlinux.org/"
-
-subpackages="linux-virt-headers"
+homepage="https://github.com/docktordreh/void-packages"
 
 linux-virt-headers_package() {
 	metapackage=yes
