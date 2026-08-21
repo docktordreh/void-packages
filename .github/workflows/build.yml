@@ -94,8 +94,8 @@ jobs:
           mkdir -p hostdir/binpkgs
 
           latest_release=$(gh release list --limit 1 --json tagName --jq '.[0].tagName // empty' --repo "$REPO_OWNER/$REPO_NAME")
-          if [ -n "$latest_release" ]; then
-            release_assets=$(gh release view "$latest_release" --json assets --jq '.assets[].name' --repo "$REPO_OWNER/$REPO_NAME")
+           if [ -n "$latest_release" ]; then
+             release_assets=$(gh release view "$latest_release" --json assets --jq '.assets[].name' --repo "$REPO_OWNER/$REPO_NAME")
             has_arch_asset=
             case "$release_assets" in
               *"$ARCH"*) has_arch_asset=1;;
@@ -105,11 +105,27 @@ jobs:
             else
               echo "No previous ${ARCH} assets found; starting with an empty local repository."
             fi
-          else
-            echo "No previous release found; starting with an empty local repository."
-          fi
+           else
+             echo "No previous release found; starting with an empty local repository."
+           fi
 
-          # Clean up mismatched architectures so repodata generates correctly
+           if [ "$FORCE_KERNEL_METAPKG" = true ] && ! compgen -G "hostdir/binpkgs/linux-virt6.18-*${ARCH}.xbps" > /dev/null; then
+             kernel_release=
+             while IFS= read -r release; do
+               release_assets=$(gh release view "$release" --json assets --jq '.assets[].name' --repo "$REPO_OWNER/$REPO_NAME")
+               case "$release_assets" in
+                 *"linux-virt6.18-"*"${ARCH}.xbps"*) kernel_release=$release; break;;
+               esac
+             done < <(gh release list --limit 20 --json tagName --jq '.[].tagName' --repo "$REPO_OWNER/$REPO_NAME")
+             if [ -n "$kernel_release" ]; then
+               gh release download "$kernel_release" \
+                 --pattern "linux-virt6.18-*${ARCH}*" \
+                 --dir hostdir/binpkgs \
+                 --repo "$REPO_OWNER/$REPO_NAME"
+             fi
+           fi
+
+           # Clean up mismatched architectures so repodata generates correctly
           if [ "$ARCH" = "x86_64" ]; then
             rm --force hostdir/binpkgs/*x86_64-musl*
           elif [ "$ARCH" = "x86_64-musl" ]; then
@@ -189,7 +205,7 @@ jobs:
           if [ "$FORCE_KERNEL_METAPKG" = true ]; then
             for pkg in linux-virt linux-virt-headers; do
               echo "🏗️ Building $pkg metapackage for $ARCH..."
-              sudo -Eu builder ./xbps-src pkg -j "$(nproc)" \
+              sudo -Eu builder ./xbps-src -1 pkg -j "$(nproc)" \
                 -m "masterdir-${{ matrix.config.arch }}" \
                 -A "${{ matrix.config.arch }}" "$pkg"
             done
