@@ -22,7 +22,7 @@ fetch_template() {
 }
 
 prune_old_series() {
-	local dir series
+	local dir series old_series
 	local -a packages=()
 	for dir in "$root"/srcpkgs/linux-virt*; do
 		[ -d "$dir" ] || continue
@@ -32,7 +32,8 @@ prune_old_series() {
 	done
 	mapfile -t packages < <(printf '%s\n' "${packages[@]}" | sort -V)
 	while [ "${#packages[@]}" -gt 5 ]; do
-		rm -rf "${packages[0]}"
+		old_series=${packages[0]##*linux-virt}
+		rm -rf "${packages[0]}" "$root/srcpkgs/linux-virt${old_series}-headers"
 		packages=("${packages[@]:1}")
 	done
 }
@@ -49,18 +50,25 @@ echo "Upstream series: $target_series"
 
 if [ "$target_series" != "$current_series" ]; then
 	target_dir=$root/srcpkgs/linux-virt${target_series}
+	headers_link=$root/srcpkgs/linux-virt${target_series}-headers
 	if [ -e "$target_dir" ]; then
 		echo "$target_dir already exists; its updater will handle the release"
 		exit 0
+	fi
+	if [ -e "$headers_link" ] && [ ! -L "$headers_link" ]; then
+		echo "$headers_link already exists and is not a symlink" >&2
+		exit 1
 	fi
 
 	mkdir "$target_dir"
 	cp "$package_dir/template" "$package_dir/update.sh" "$target_dir/"
 	cp -a "$package_dir/files" "$target_dir/"
+	rm -f "$headers_link"
+	ln -s "linux-virt${target_series}" "$headers_link"
 	sed -i "s/${pkgname}/linux-virt${target_series}/g" "$target_dir/template"
 
 	if ! REGENERATE_CONFIGS=1 bash "$target_dir/update.sh"; then
-		rm -rf "$target_dir"
+		rm -rf "$target_dir" "$headers_link"
 		exit 1
 	fi
 
