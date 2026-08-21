@@ -10,7 +10,7 @@ Current scope:
 The main motivation for this repository is to provide useful aarch64 packages that are otherwise missing or difficult to obtain on Void Linux.
 
 [![Void Linux](https://img.shields.io/badge/Void_Linux-packages-478061?logo=linux)](https://voidlinux.org/)
-[![Build](https://img.shields.io/github/actions/workflow/status/docktordreh/void-packages/build-workflows.yml?label=build\&logo=githubactions)](https://github.com/docktordreh/void-packages/actions)
+[![Build](https://img.shields.io/github/actions/workflow/status/docktordreh/void-packages/build.yml?label=build\&logo=githubactions)](https://github.com/docktordreh/void-packages/actions)
 [![Release](https://img.shields.io/github/v/release/docktordreh/void-packages?logo=github)](https://github.com/docktordreh/void-packages/releases)
 
 ## Repository
