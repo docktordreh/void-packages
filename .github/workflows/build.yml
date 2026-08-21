@@ -3,9 +3,16 @@ name: 🏗️ Build Void Linux Packages
 env:
   TAG: workflow-${{ github.run_id }}
   SHA: ${{ github.sha }}
+  FORCE_KERNEL: ${{ inputs.force_kernel || false }}
 
 on:
   workflow_dispatch:
+    inputs:
+      force_kernel:
+        description: Rebuild the linux-virt target and its metapackage
+        required: false
+        type: boolean
+        default: false
   push:
     branches:
       - main
@@ -37,6 +44,7 @@ jobs:
         SHA: '${{ env.SHA }}'
         ARCH: '${{ matrix.config.arch }}'
         XBPS_TARGET_ARCH: '${{ matrix.config.arch }}'
+        FORCE_KERNEL: '${{ env.FORCE_KERNEL }}'
         REPO_OWNER: "${{ github.repository_owner }}"
         REPO_NAME: "${{ github.event.repository.name }}"
     if: ${{ github.ref == 'refs/heads/main' }}
@@ -120,6 +128,10 @@ jobs:
           git diff-tree -r --no-renames --name-only --diff-filter=AM "$latest_sha" "$SHA" -- 'srcpkgs/**' > /tmp/changed-files
           cut -d/ -f 2 /tmp/changed-files | sort -u > /tmp/changed-packages
           meta_target="linux-virt$(sed -n 's/^version=//p' srcpkgs/linux-virt/template)"
+          if [ "$FORCE_KERNEL" = true ]; then
+            printf '%s\n' "$meta_target" >> /tmp/changed-packages
+            sort -u -o /tmp/changed-packages /tmp/changed-packages
+          fi
           if [ -s /tmp/changed-packages ]; then
             xargs sudo -Eu builder ./xbps-src sort-dependencies < /tmp/changed-packages > /tmp/templates
             needs_meta=
