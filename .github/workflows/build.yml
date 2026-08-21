@@ -310,3 +310,29 @@ jobs:
             void-packages/hostdir/binpkgs/*.xbps
             void-packages/hostdir/binpkgs/*.sig2
             void-packages/hostdir/binpkgs/*repodata
+
+  cleanup-releases:
+    name: 🧹 Cleanup old releases
+    needs: build
+    if: ${{ needs.build.result == 'success' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPOSITORY: ${{ github.repository }}
+      CURRENT_TAG: workflow-${{ github.run_id }}
+    steps:
+      - name: Delete old workflow releases
+        run: |
+          set -eu
+          for tag in $(gh release list --repo "$REPOSITORY" --limit 100 --json tagName --jq '.[].tagName'); do
+            case "$tag" in
+              workflow-*)
+                [ "$tag" = "$CURRENT_TAG" ] || gh release delete "$tag" \
+                  --repo "$REPOSITORY" \
+                  --cleanup-tag \
+                  --yes
+                ;;
+            esac
+          done
