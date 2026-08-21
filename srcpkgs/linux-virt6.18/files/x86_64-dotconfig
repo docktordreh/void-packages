@@ -8686,15 +8686,3 @@ CONFIG_MEMTEST=y
 # end of Kernel hacking
 
 CONFIG_IO_URING_ZCRX=y
-y
-CONFIG_MEMTEST=y
-# CONFIG_HYPERV_TESTING is not set
-# end of Kernel Testing and Coverage
-
-#
-# Rust hacking
-#
-# end of Rust hacking
-# end of Kernel hacking
-
-CONFIG_IO_URING_ZCRX=y

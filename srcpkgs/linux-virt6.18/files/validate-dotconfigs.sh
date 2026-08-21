@@ -44,6 +44,10 @@ failed=0
 for arch in x86_64 arm64; do
 	file=$config_dir/${arch}-dotconfig
 	[ -s "$file" ] || { echo "missing $file" >&2; failed=1; continue; }
+	while IFS=: read -r line content; do
+		echo "$file:$line: invalid config syntax: $content" >&2
+		failed=1
+	done < <(awk '!/^(CONFIG_[A-Za-z0-9_]+=|#|[[:space:]]*$)/ { print NR ":" $0 }' "$file")
 
 	for symbol in \
 		VIRTIO VIRTIO_PCI VIRTIO_BLK VIRTIO_NET SCSI_VIRTIO VIRTIO_CONSOLE \
