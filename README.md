@@ -36,8 +36,8 @@ On first use, verify and accept the repository signing key fingerprint.
 | Package              | Architectures       | Description                                  |
 | -------------------- | ------------------- | -------------------------------------------- |
 | `zen-browser`        | `aarch64`, `x86_64` | Zen Browser binary package                   |
-| `linux-virt`         | `aarch64`, `x86_64` | VM guest optimized Linux kernel, coming soon |
-| `linux-virt-headers` | `aarch64`, `x86_64` | Matching kernel headers, coming soon         |
+| `linux-virt`         | `aarch64`, `x86_64` | VM guest optimized Linux kernel              |
+| `linux-virt-headers` | `aarch64`, `x86_64` | Matching kernel headers                      |
 
 ### Zen Browser
 
@@ -54,6 +54,19 @@ The package uses the upstream Zen Browser binaries for the respective architectu
 `linux-virt` is intended as a lean Void kernel flavor for virtual machine guests.
 
 It keeps general purpose guest and VirtIO functionality while removing unnecessary physical hardware support.
+
+The package tracks Void's current kernel series and patch release. Its
+checked-in architecture configs are generated from Void's matching baseline
+with the fragments in the active `srcpkgs/linux-virt<series>/files/config/`
+directory. When Void moves to a new series, the updater creates a new
+`linux-virt<series>` package, updates both kernel and headers meta dependencies,
+and retains the five newest series for co-installable upgrades.
+
+Regenerate and validate the active series with:
+
+```sh
+REGENERATE_CONFIGS=1 bash srcpkgs/linux-virt6.18/update.sh
+```
 
 ## Automation
 

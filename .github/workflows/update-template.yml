@@ -43,6 +43,8 @@ jobs:
   update-versions:
     name: update ${{ matrix.pkg.name }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     needs: find-autoupdates
     if: ${{ needs.find-autoupdates.outputs.matrix != '[]' }}
     strategy:
@@ -55,34 +57,41 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
-          token: ${{ secrets.PULL_PUSH }}
+          token: ${{ github.token }}
 
       - uses: dcarbone/install-jq-action@v3.2.0
+
+      - name: Install kernel config dependencies
+        run: sudo apt-get update && sudo apt-get install --yes bc bison flex
 
       - name: Run updates
         run: bash "${{ matrix.pkg.path }}"
         env:
           GH_TOKEN: ${{ github.token }}
-        continue-on-error: true
+          REGENERATE_CONFIGS: '1'
 
       - uses: actions/upload-artifact@v7
         name: upload template
         if: always()
         with:
           name: ${{ matrix.pkg.name }}
-          path: ${{ matrix.pkg.dir }}
+          path: |
+            ${{ matrix.pkg.dir }}
+            srcpkgs/linux-virt*
 
   commit-updates:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     needs:
       - update-versions
-    if: always()
+    if: ${{ needs.update-versions.result == 'success' }}
     steps:
       - uses: actions/checkout@v6
         with:
           persist-credentials: false
           fetch-depth: 0
-          token: ${{ secrets.PULL_PUSH }}
+          token: ${{ github.token }}
 
       - uses: actions/download-artifact@v8
         with:
@@ -144,8 +153,9 @@ jobs:
         id: check-updates
         run: |
           if [[ -n "$(git status --porcelain)" ]]; then
-            git config user.name "Sofiya"
-            git config user.email "107557749+sofijacom@users.noreply.github.com"
+            git config user.name "docktordreh"
+            git config user.email "valentin_lechner@dismail.de"
+            git add -A
             git commit --all --message "🤖 Automated update" --signoff
             echo "has_updates=true" >> "$GITHUB_OUTPUT"
           else
@@ -157,6 +167,6 @@ jobs:
         if: steps.check-updates.outputs.has_updates == 'true'
         uses: ad-m/github-push-action@v1.3.0
         with:
-          github_token: ${{ secrets.PULL_PUSH }}
+          github_token: ${{ github.token }}
           branch: ${{ github.ref }}
           
