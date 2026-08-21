@@ -29,7 +29,7 @@ python_version=3
 
 archs="x86_64* i686* aarch64*"
 
-nodebug=yes  # -dbg package is generated below manually
+nodebug=yes
 nostrip=yes
 noverifyrdeps=yes
 noshlibprovides=yes
@@ -291,14 +291,12 @@ do_install() {
 			;;
 	esac
 
-	msg_normal "$pkgver: extracting debug info and compressing modules, please wait...\n"
-	install -Dm644 vmlinux ${DESTDIR}/usr/lib/debug/boot/vmlinux-${_kernver}
+	msg_normal "$pkgver: signing and compressing modules, please wait...\n"
 	(
 	cd ${DESTDIR}
-	export DESTDIR
 	export SIGN_FILE="${XBPS_WRAPPERDIR}/sign-file sha512 ${wrksrc}/certs/signing_key.pem ${wrksrc}/certs/signing_key.x509"
 	find ./ -name '*.ko' -print0 | \
-		xargs -0r -n1 -P ${XBPS_MAKEJOBS} ${FILESDIR}/mv-debug
+		xargs -0r -n1 -P ${XBPS_MAKEJOBS} ${FILESDIR}/process-module
 	)
 	depmod -b ${DESTDIR}/usr -F System.map ${_kernver}
 	rm -f ${DESTDIR}/lib
@@ -312,18 +310,5 @@ linux-virt6.18-headers_package() {
 	pkg_install() {
 		vmove usr/src
 		vmove usr/lib/modules/${_kernver}/build
-	}
-}
-
-linux-virt6.18-dbg_package() {
-	preserve=yes
-	nostrip=yes
-	noverifyrdeps=yes
-	noshlibprovides=yes
-	repository=debug
-	short_desc+=" - debugging symbols"
-	pkg_install() {
-		vmove usr/lib/debug
-		vmove "boot/System.map-${_kernver}"
 	}
 }

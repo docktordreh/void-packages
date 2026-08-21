@@ -1,0 +1,6 @@
+#!/bin/sh
+set -e
+mod=$1
+"/usr/bin/$STRIP" --strip-debug "$mod"
+$SIGN_FILE "$mod"
+zstd -T1 --rm -f -q "$mod"
