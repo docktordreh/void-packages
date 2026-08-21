@@ -77,7 +77,7 @@ jobs:
           name: ${{ matrix.pkg.name }}
           path: |
             ${{ matrix.pkg.dir }}
-            ${{ matrix.pkg.name == 'linux-virt6.18' && 'srcpkgs/linux-virt*' || '' }}
+            ${{ startsWith(matrix.pkg.name, 'linux-virt') && 'srcpkgs/linux-virt*' || 'srcpkgs/linux-virt/template' }}
 
   commit-updates:
     runs-on: ubuntu-latest
