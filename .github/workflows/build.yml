@@ -109,20 +109,26 @@ jobs:
              echo "No previous release found; starting with an empty local repository."
            fi
 
-           if [ "$FORCE_KERNEL_METAPKG" = true ] && ! compgen -G "hostdir/binpkgs/linux-virt6.18-*${ARCH}.xbps" > /dev/null; then
-             kernel_release=
-             while IFS= read -r release; do
+           kernel_pkg=
+           for package in hostdir/binpkgs/linux-virt6.18-*${ARCH}.xbps; do
+             if [ -e "$package" ]; then
+               kernel_pkg=1
+               break
+             fi
+           done
+           if [ "$FORCE_KERNEL_METAPKG" = true ] && [ -z "$kernel_pkg" ]; then
+             for release in $(gh release list --limit 20 --json tagName --jq '.[].tagName' --repo "$REPO_OWNER/$REPO_NAME"); do
                release_assets=$(gh release view "$release" --json assets --jq '.assets[].name' --repo "$REPO_OWNER/$REPO_NAME")
                case "$release_assets" in
-                 *"linux-virt6.18-"*"${ARCH}.xbps"*) kernel_release=$release; break;;
+                 *"linux-virt6.18-"*"${ARCH}.xbps"*)
+                   gh release download "$release" \
+                     --pattern "linux-virt6.18-*${ARCH}*" \
+                     --dir hostdir/binpkgs \
+                     --repo "$REPO_OWNER/$REPO_NAME"
+                   break
+                   ;;
                esac
-             done < <(gh release list --limit 20 --json tagName --jq '.[].tagName' --repo "$REPO_OWNER/$REPO_NAME")
-             if [ -n "$kernel_release" ]; then
-               gh release download "$kernel_release" \
-                 --pattern "linux-virt6.18-*${ARCH}*" \
-                 --dir hostdir/binpkgs \
-                 --repo "$REPO_OWNER/$REPO_NAME"
-             fi
+             done
            fi
 
            # Clean up mismatched architectures so repodata generates correctly
