@@ -55,7 +55,8 @@ if [ "$target_series" != "$current_series" ]; then
 	fi
 
 	mkdir "$target_dir"
-	cp -a "$package_dir/." "$target_dir/"
+	cp "$package_dir/template" "$package_dir/update.sh" "$target_dir/"
+	cp -a "$package_dir/files" "$target_dir/"
 	sed -i "s/${pkgname}/linux-virt${target_series}/g" "$target_dir/template"
 
 	if ! REGENERATE_CONFIGS=1 bash "$target_dir/update.sh"; then

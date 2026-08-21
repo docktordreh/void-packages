@@ -96,6 +96,7 @@ jobs:
       - uses: actions/download-artifact@v8
         with:
           path: ./srcpkgs
+          merge-multiple: true
 
       - name: Updated templates summary
         run: |
