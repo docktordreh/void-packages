@@ -109,8 +109,9 @@ jobs:
              echo "No previous release found; starting with an empty local repository."
            fi
 
+           kernel_pkg_prefix="linux-virt$(sed -n 's/^version=//p' srcpkgs/linux-virt/template)"
            kernel_pkg=
-           for package in hostdir/binpkgs/linux-virt6.18-*${ARCH}.xbps; do
+           for package in hostdir/binpkgs/${kernel_pkg_prefix}-*${ARCH}.xbps; do
              if [ -e "$package" ]; then
                kernel_pkg=1
                break
@@ -120,9 +121,10 @@ jobs:
              for release in $(gh release list --limit 20 --json tagName --jq '.[].tagName' --repo "$REPO_OWNER/$REPO_NAME"); do
                release_assets=$(gh release view "$release" --json assets --jq '.assets[].name' --repo "$REPO_OWNER/$REPO_NAME")
                case "$release_assets" in
-                 *"linux-virt6.18-"*"${ARCH}.xbps"*)
-                   gh release download "$release" \
-                     --pattern "linux-virt6.18-*${ARCH}*" \
+                 *"${kernel_pkg_prefix}-"*"${ARCH}.xbps"*)
+                   echo "Using $release for ${kernel_pkg_prefix} packages."
+                    gh release download "$release" \
+                      --pattern "*${ARCH}*" \
                      --dir hostdir/binpkgs \
                      --repo "$REPO_OWNER/$REPO_NAME"
                    break
