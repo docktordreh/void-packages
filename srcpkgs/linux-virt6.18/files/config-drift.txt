@@ -1,4 +1,4 @@
-linux-virt config drift against Void 6.18
+linux-virt6.18 config drift against Void 6.18
 x86_64:
   disabled: 92
   enabled: 0
