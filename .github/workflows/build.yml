@@ -120,16 +120,20 @@ jobs:
           git diff-tree -r --no-renames --name-only --diff-filter=AM "$latest_sha" "$SHA" -- 'srcpkgs/**' > /tmp/changed-files
           cut -d/ -f 2 /tmp/changed-files | sort -u > /tmp/changed-packages
           meta_target="linux-virt$(sed -n 's/^version=//p' srcpkgs/linux-virt/template)"
-          needs_meta=
-          while IFS= read -r pkg; do
-            [ "$pkg" = "$meta_target" ] && needs_meta=1
-          done < /tmp/changed-packages
-          if [ -n "$needs_meta" ]; then
-            printf '%s\n' linux-virt >> /tmp/changed-packages
-            sort -u -o /tmp/changed-packages /tmp/changed-packages
-          fi
           if [ -s /tmp/changed-packages ]; then
             xargs sudo -Eu builder ./xbps-src sort-dependencies < /tmp/changed-packages > /tmp/templates
+            needs_meta=
+            while IFS= read -r pkg; do
+              if [ "$pkg" = "$meta_target" ]; then
+                needs_meta=1
+                break
+              fi
+            done < /tmp/templates
+            if [ -n "$needs_meta" ]; then
+              printf '%s\n' linux-virt >> /tmp/changed-packages
+              sort -u -o /tmp/changed-packages /tmp/changed-packages
+              xargs sudo -Eu builder ./xbps-src sort-dependencies < /tmp/changed-packages > /tmp/templates
+            fi
           else
             : > /tmp/templates
           fi
