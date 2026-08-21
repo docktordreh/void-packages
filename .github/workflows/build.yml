@@ -1,7 +1,7 @@
 name: 🏗️ Build Void Linux Packages
 
 env:
-  TAG: workflow-${{ github.run_number }}
+  TAG: workflow-${{ github.run_id }}
   SHA: ${{ github.sha }}
 
 on:
@@ -119,6 +119,16 @@ jobs:
           chown -R builder:builder .
           git diff-tree -r --no-renames --name-only --diff-filter=AM "$latest_sha" "$SHA" -- 'srcpkgs/**' > /tmp/changed-files
           cut -d/ -f 2 /tmp/changed-files | sort -u > /tmp/changed-packages
+          needs_meta=
+          while IFS= read -r pkg; do
+            case "$pkg" in
+              linux-virt[0-9]*) needs_meta=1;;
+            esac
+          done < /tmp/changed-packages
+          if [ -n "$needs_meta" ]; then
+            printf '%s\n' linux-virt >> /tmp/changed-packages
+            sort -u -o /tmp/changed-packages /tmp/changed-packages
+          fi
           if [ -s /tmp/changed-packages ]; then
             xargs sudo -Eu builder ./xbps-src sort-dependencies < /tmp/changed-packages > /tmp/templates
           else
