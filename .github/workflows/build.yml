@@ -140,11 +140,18 @@ jobs:
                 needs_meta=1
                 break
               fi
-            done < /tmp/templates
+            done < /tmp/changed-packages
             if [ -n "$needs_meta" ]; then
-              printf '%s\n' linux-virt >> /tmp/changed-packages
-              sort -u -o /tmp/changed-packages /tmp/changed-packages
-              xargs sudo -Eu builder ./xbps-src sort-dependencies < /tmp/changed-packages > /tmp/templates
+              has_meta=
+              while IFS= read -r pkg; do
+                if [ "$pkg" = linux-virt ]; then
+                  has_meta=1
+                  break
+                fi
+              done < /tmp/templates
+              if [ -z "$has_meta" ]; then
+                printf '%s\n' linux-virt >> /tmp/templates
+              fi
             fi
           else
             : > /tmp/templates
