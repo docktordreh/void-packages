@@ -1,0 +1,43 @@
+# Template file for 'bitwarden-desktop'
+pkgname=bitwarden-desktop
+version=2026.8.0
+revision=1
+archs="x86_64 aarch64"
+depends="alsa-lib at-spi2-core cairo cups dbus gtk+3 hicolor-icon-theme
+ libatomic libnotify libsecret libXtst libXScrnSaver nss pango xdg-utils"
+short_desc="Secure and free password manager desktop client"
+maintainer="Valentin Lechner <valentin_lechner@tutanota.de>"
+license="GPL-3.0-only"
+homepage="https://bitwarden.com/"
+changelog="https://github.com/bitwarden/clients/releases"
+nostrip=yes
+
+case "$XBPS_TARGET_MACHINE" in
+aarch64*)
+    distfiles="https://github.com/bitwarden/clients/releases/download/desktop-v${version}/bitwarden_${version}_arm64.tar.gz"
+    checksum="5962b5dd1bfe19b3c198a6b4157c4431efe078e573217bffcaafa71147476ebe"
+    ;;
+x86_64*)
+    distfiles="https://github.com/bitwarden/clients/releases/download/desktop-v${version}/bitwarden_${version}_x64.tar.gz"
+    checksum="d88fd894e4b1c58bde3efb51b7b1bd8fab6c6a46be632b0b9cdadcc00147790e"
+    ;;
+*)
+    broken="Unsupported architecture: ${XBPS_TARGET_MACHINE}"
+    ;;
+esac
+
+do_install() {
+    vmkdir usr/lib/${pkgname}
+    vmkdir usr/bin
+    vmkdir usr/share/applications
+    vcopy * usr/lib/${pkgname}
+    ln -s /usr/lib/${pkgname}/bitwarden "${DESTDIR}/usr/bin/bitwarden"
+
+    chmod 4755 "${DESTDIR}/usr/lib/${pkgname}/chrome-sandbox"
+    vinstall resources/com.bitwarden.desktop.desktop 0644 usr/share/applications
+    for size in 16 32 64 128 256 512 1024; do
+        vinstall "resources/icons/${size}x${size}.png" 0644 \
+            "usr/share/icons/hicolor/${size}x${size}/apps" \
+            com.bitwarden.desktop.png
+    done
+}

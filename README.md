@@ -4,6 +4,7 @@ Unofficial package repository for **Void Linux**, focused on improving package a
 
 Current scope:
 
+* `bitwarden-desktop` for `aarch64` and `x86_64`
 * `zen-browser` for `aarch64` and `x86_64`
 * `linux-virt`, a VM guest optimized kernel, coming for `aarch64` and `x86_64`
 
@@ -35,6 +36,7 @@ On first use, verify and accept the repository signing key fingerprint.
 
 | Package              | Architectures       | Description                                  |
 | -------------------- | ------------------- | -------------------------------------------- |
+| `bitwarden-desktop`  | `aarch64`, `x86_64` | Bitwarden password manager desktop client   |
 | `zen-browser`        | `aarch64`, `x86_64` | Zen Browser binary package                   |
 | `linux-virt`         | `aarch64`, `x86_64` | VM guest optimized Linux kernel              |
 | `linux-virt-headers` | `aarch64`, `x86_64` | Matching kernel headers                      |
