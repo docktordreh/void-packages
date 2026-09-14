@@ -253,6 +253,9 @@ jobs:
           # Now these operations have an existing repository index.
           sudo -Eu builder xbps-rindex --remove-obsoletes "${PWD}"
 
+          # Obsolete packages may have been removed from the directory.
+          set -- *.xbps
+
           sudo -Eu builder xbps-rindex \
             --privkey key.pem \
             --sign \
