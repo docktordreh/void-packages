@@ -3,7 +3,7 @@ pkgname=bitwarden-desktop
 version=2026.8.0
 revision=1
 archs="x86_64 aarch64"
-depends="alsa-lib at-spi2-core cairo cups dbus gtk+3 hicolor-icon-theme
+depends="alsa-lib at-spi2-core cairo cups dbus gtk+3 hicolor-icon-theme libX11
  libatomic libnotify libsecret libXtst libXScrnSaver nss pango xdg-utils"
 short_desc="Secure and free password manager desktop client"
 maintainer="Valentin Lechner <valentin_lechner@tutanota.de>"
