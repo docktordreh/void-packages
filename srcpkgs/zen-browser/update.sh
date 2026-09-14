@@ -40,8 +40,8 @@ sed -i "s/^revision=.*/revision=1/" "$TPL"
 # Template structure: if (aarch64) { checksum } else { checksum }
 # First checksum line = aarch64, second = x86_64
 awk -v chk_aarch="$CHK_AARCH64" -v chk_x86="$CHK_X86" '
-  /^checksum=/ && n_checksums == 0 { $0="checksum=\"" chk_aarch "\""; n_checksums++ }
-  /^checksum=/ && n_checksums == 1 { $0="checksum=\"" chk_x86 "\""; n_checksums++ }
+  /^[[:space:]]*checksum=/ && n_checksums == 0 { sub(/checksum=.*/, "checksum=\"" chk_aarch "\""); n_checksums++ }
+  /^[[:space:]]*checksum=/ && n_checksums == 1 { sub(/checksum=.*/, "checksum=\"" chk_x86 "\""); n_checksums++ }
   { print }
 ' "$TPL" > "${TPL}.tmp" && mv "${TPL}.tmp" "$TPL"
 
