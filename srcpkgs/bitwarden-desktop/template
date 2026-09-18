@@ -1,6 +1,6 @@
 # Template file for 'bitwarden-desktop'
 pkgname=bitwarden-desktop
-version=2026.8.0
+version=2026.9.0
 revision=1
 archs="x86_64 aarch64"
 depends="alsa-lib at-spi2-core cairo cups dbus gtk+3 hicolor-icon-theme libX11
@@ -15,11 +15,11 @@ nostrip=yes
 case "$XBPS_TARGET_MACHINE" in
 aarch64*)
     distfiles="https://github.com/bitwarden/clients/releases/download/desktop-v${version}/bitwarden_${version}_arm64.tar.gz"
-    checksum="5962b5dd1bfe19b3c198a6b4157c4431efe078e573217bffcaafa71147476ebe"
+    checksum="786266184aaaf25087a58a680faaee944c6dc654aedb67cbefebb3da621217cb"
     ;;
 x86_64*)
     distfiles="https://github.com/bitwarden/clients/releases/download/desktop-v${version}/bitwarden_${version}_x64.tar.gz"
-    checksum="d88fd894e4b1c58bde3efb51b7b1bd8fab6c6a46be632b0b9cdadcc00147790e"
+    checksum="a977a7a601aee511a8d6aaff439352c874e28115b894d9c745a4b16f491330ce"
     ;;
 *)
     broken="Unsupported architecture: ${XBPS_TARGET_MACHINE}"
