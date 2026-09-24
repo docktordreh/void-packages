@@ -1,0 +1,51 @@
+--- a/openscad/src/geometry/Reindexer.h
++++ b/openscad/src/geometry/Reindexer.h
+@@ -14,7 +14,7 @@
+    The latter is necessary for VBO's or for unifying texture coordinate indices to
+    multiple texture coordinate arrays.
+  */
+-template <typename T>
++template <typename T, typename Hash = std::hash<T>>
+ class Reindexer
+ {
+ public:
+@@ -59,7 +59,7 @@
+   }
+ 
+ private:
+-  std::unordered_map<T, int> map;
++  std::unordered_map<T, int, Hash> map;
+   std::vector<T> vec;
+ };
+--- a/openscad/src/geometry/cgal/cgalutils-applyops.cc
++++ b/openscad/src/geometry/cgal/cgalutils-applyops.cc
+@@ -19,6 +19,7 @@
+ #include <exception>
+ #include <memory>
+ #include <queue>
++#include <functional>
+ #include <string>
+ #include <utility>
+ #include <vector>
+@@ -153,9 +154,24 @@
+ std::unique_ptr<PolySet> applyHull3D(const Geometry::Geometries& children)
+ {
+   using Hull_kernel = CGAL::Epick;
++  struct HullPointHash {
++    std::size_t operator()(const Hull_kernel::Point_3& point) const noexcept
++    {
++      std::size_t seed = 0;
++      const auto combine = [&seed](const double value) {
++        seed ^= std::hash<double>{}(value) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
++      };
++      combine(point.x());
++      combine(point.y());
++      combine(point.z());
++      return seed;
++    }
++  };
+   // Collect point cloud
+-  Reindexer<Hull_kernel::Point_3> reindexer;
++  Reindexer<Hull_kernel::Point_3, HullPointHash> reindexer;
+ 
+   auto addCapacity = [&](const auto n) { reindexer.reserve(reindexer.size() + n); };
