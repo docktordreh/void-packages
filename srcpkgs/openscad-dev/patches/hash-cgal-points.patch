@@ -9,7 +9,7 @@
  class Reindexer
  {
  public:
-@@ -59,7 +59,7 @@
+@@ -64,5 +64,5 @@
    }
  
  private:
@@ -19,7 +19,7 @@
  };
 --- a/openscad/src/geometry/cgal/cgalutils-applyops.cc
 +++ b/openscad/src/geometry/cgal/cgalutils-applyops.cc
-@@ -19,6 +19,7 @@
+@@ -24,6 +24,7 @@
  #include <exception>
  #include <memory>
  #include <queue>
@@ -27,7 +27,7 @@
  #include <string>
  #include <utility>
  #include <vector>
-@@ -153,9 +154,24 @@
+@@ -156,7 +156,20 @@
  std::unique_ptr<PolySet> applyHull3D(const Geometry::Geometries& children)
  {
    using Hull_kernel = CGAL::Epick;
