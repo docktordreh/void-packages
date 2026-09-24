@@ -2,7 +2,7 @@
 pkgname=linux-virt6.18
 version=6.18.53
 revision=1
-short_desc="VM-optimized Linux kernel and modules (${version%.*} series)"
+short_desc="Linux kernel and modules for virtual machine guests (${version%.*} series)"
 maintainer="Valentin Lechner <valentin_lechner@tutanota.de>"
 license="GPL-2.0-only"
 homepage="https://www.kernel.org"

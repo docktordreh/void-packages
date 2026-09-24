@@ -1,10 +1,10 @@
-name: 🔁 Auto update
+name: Automatic updates
 run-name: "Automated update of ${{ github.ref_name }} by @${{ github.actor }}"
 
 on:
   schedule:
     - cron: '0 4 * * *'
-    # - cron: '0 4 * * 1,4'  # Каждый понедельник и четветг в 00:00 UTC (07:00 WIB)
+    # - cron: '0 4 * * 1,4'  # Every Monday and Thursday at 00:00 UTC (07:00 WIB)
   workflow_dispatch:
 
 jobs:
@@ -34,14 +34,14 @@ jobs:
             printf '{"dir":"%s","name":"%s","path":"%s"}\n' "$dir" "$pkg" "$path"
           done <<< "${updates}" | jq -cs > matrix.json
 
-          # separat lista med bara pkg-namn
+          # Package names only.
           jq -c 'map(.name)' matrix.json > pkgs.json
 
           echo "matrix=$(cat matrix.json)" >> "$GITHUB_OUTPUT"
           echo "pkgs=$(cat pkgs.json)" >> "$GITHUB_OUTPUT"
 
   update-versions:
-    name: update ${{ matrix.pkg.name }}
+    name: Update ${{ matrix.pkg.name }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -71,7 +71,7 @@ jobs:
           REGENERATE_CONFIGS: '1'
 
       - uses: actions/upload-artifact@v7
-        name: upload template
+        name: Upload template
         if: always()
         with:
           name: ${{ matrix.pkg.name }}
@@ -101,7 +101,7 @@ jobs:
       - name: Updated templates summary
         run: |
           echo "" >> "$GITHUB_STEP_SUMMARY"
-          echo "## Updated Templates" >> "$GITHUB_STEP_SUMMARY"
+          echo "## Updated templates" >> "$GITHUB_STEP_SUMMARY"
 
           changed=$(git diff --name-only | grep 'srcpkgs/.*/template$' || true)
 
@@ -114,14 +114,14 @@ jobs:
             echo "" >> "$GITHUB_STEP_SUMMARY"
             echo "$changed" | while read file; do
               pkg=$(echo "$file" | cut -d'/' -f2)
-              echo "- **$pkg** → \`$file\`" >> "$GITHUB_STEP_SUMMARY"
+              echo "- $pkg: \`$file\`" >> "$GITHUB_STEP_SUMMARY"
             done
           fi
 
       - name: Diff preview
         run: |
           echo "" >> "$GITHUB_STEP_SUMMARY"
-          echo "## Diff Preview" >> "$GITHUB_STEP_SUMMARY"
+          echo "## Diff preview" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
 
           diff_output=$(git diff --patch --minimal | sed 's/^/    /')
@@ -136,38 +136,37 @@ jobs:
             echo '```' >> "$GITHUB_STEP_SUMMARY"
             echo "</details>" >> "$GITHUB_STEP_SUMMARY"
           fi
-          
-      #- name: commit updates
+
+      #- name: Commit updates
       #  id: check-updates
       #  run: |
       #    if [[ -n "$(git status --porcelain)" ]]; then
       #      git config user.name "github-actions[bot]"
       #      git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-      #      git commit --all --message "🤖 Automated update" --signoff
+      #      git commit --all --message "Automated update" --signoff
       #      echo "has_updates=true" >> "$GITHUB_OUTPUT"
       #    else
       #      echo "No new updates"
       #      echo "has_updates=false" >> "$GITHUB_OUTPUT"
       #    fi
-      
-      - name: commit updates (on my own behalf)
+
+      - name: Commit updates
         id: check-updates
         run: |
           if [[ -n "$(git status --porcelain)" ]]; then
             git config user.name "docktordreh"
             git config user.email "valentin_lechner@dismail.de"
             git add -A
-            git commit --all --message "🤖 Automated update" --signoff
+            git commit --all --message "Automated update" --signoff
             echo "has_updates=true" >> "$GITHUB_OUTPUT"
           else
             echo "No new updates"
             echo "has_updates=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: push updates
+      - name: Push updates
         if: steps.check-updates.outputs.has_updates == 'true'
         uses: ad-m/github-push-action@v1.3.0
         with:
           github_token: ${{ github.token }}
           branch: ${{ github.ref }}
-          

@@ -58,8 +58,8 @@ fragment_common=$files_dir/config/common-virt.fragment
 fragment_usb=$files_dir/config/usb-passthrough.fragment
 fragment_arm=$files_dir/config/arm64-physical.fragment
 
-# Values here are the non-negotiable guest path. The fragment policy chooses
-# modules; these calls re-assert the path after every dependency resolution.
+# These settings are required for virtual machine guests. Fragments select
+# modules; these calls restore them after dependency resolution.
 force_y=(
 	VIRTUALIZATION HYPERVISOR_GUEST PARAVIRT KVM_GUEST BLOCK NET INET IPV6
 	PCI USB DRM EFI EFI_STUB
@@ -104,7 +104,8 @@ for arch in x86_64 arm64; do
 			"$kernel_source/scripts/config" --file .config --module "$symbol"
 		done
 		make -C "$kernel_source" O="$work" ARCH="$kernel_arch" olddefconfig
-		# Kconfig selects HWMON from retained stale driver entries; no VM path needs it.
+		# Kconfig can select HWMON from retained driver entries. Virtual machine
+		# builds do not need it.
 		for symbol in HWMON HWMON_VID; do
 			"$kernel_source/scripts/config" --file .config --disable "$symbol"
 		done

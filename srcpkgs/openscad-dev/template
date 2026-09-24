@@ -1,0 +1,55 @@
+# Template file for 'openscad-dev'
+pkgname=openscad-dev
+version=2026.09.23
+revision=1
+_commit=28fe66bcaf3e89239153cd16c34499c541d2841e
+_mcad=1ea402208c3127ffb443931e9bb1681c191dacca
+_clipper2=c7f820f6a03fa91f189b866d27bf40dfe47abaa6
+_opencsg=9bf122715213dca05e70993dd8672fe3aa36c518
+_manifold=11235e6b8ebea2dbed8aec4285685aafd3d95667
+_mimalloc=30b2d9d89099bee08e9f67a1ffb3e12e7ba45227
+_sanitizers_cmake=bcb1fc68616e9645ca5acea2992412606373ab04
+build_wrksrc=openscad
+build_style=cmake
+configure_args="-DENABLE_TESTS=OFF -DUSE_CCACHE=OFF -DUSE_QT6=ON
+ -DUSE_BUILTIN_OPENCSG=OFF -DUSE_GLAD=OFF -DUSE_GLEW=ON
+ -DCMAKE_REQUIRE_FIND_PACKAGE_Lib3MF=OFF -DSNAPSHOT=ON -DSUFFIX=nightly
+ -DOPENSCAD_VERSION=${version} -DOPENSCAD_COMMIT=${_commit}"
+hostmakedepends="bison flex gettext gettext-devel pkg-config qt6-base-devel"
+makedepends="cgal-devel double-conversion-devel eigen
+ boost-devel-minimal libboost_regex libboost_program_options
+ harfbuzz-devel fontconfig-devel libglib-devel glew-devel
+ opencsg-devel qscintilla-qt6-devel qt6-base-devel qt6-multimedia-devel
+ qt6-svg-devel qt6-qt5compat-devel libxml2-devel libzip-devel
+ openssl-devel tbb-devel cairo-devel"
+short_desc="Solid 3D CAD modeller"
+maintainer="Pierre Allegraud <pierre.allegraud@crans.org>"
+license="GPL-2.0-or-later"
+homepage="http://www.openscad.org"
+distfiles="https://github.com/openscad/openscad/archive/${_commit}.tar.gz>openscad.tar.gz
+ https://github.com/openscad/MCAD/archive/${_mcad}.tar.gz>mcad.tar.gz
+ https://github.com/AngusJohnson/Clipper2/archive/${_clipper2}.tar.gz>clipper2.tar.gz
+ https://github.com/floriankirsch/OpenCSG/archive/${_opencsg}.tar.gz>opencsg.tar.gz
+ https://github.com/elalish/manifold/archive/${_manifold}.tar.gz>manifold.tar.gz
+ https://github.com/microsoft/mimalloc/archive/${_mimalloc}.tar.gz>mimalloc.tar.gz
+ https://github.com/arsenm/sanitizers-cmake/archive/${_sanitizers_cmake}.tar.gz>sanitizers-cmake.tar.gz"
+checksum="db0a0b7e200a92fda6bccb5ec168d73e93b0133395d3ceee9256f556aca534fb
+ 3d04077d369814638c3f018fecc39439011a47f545026f43c1a465bce1773f57
+ 399e712bd653a85e1507fbb02de8032d264e235a8e62e7028cee91f0490418b6
+ d0139ed0e0934f51d4748e0dab19e7147cac5efc35f6d3bfa844a19fbb3bfd14
+ 4fa8ba091b4b905fe19f9acd550484640426c5f10ccc0e0100143aa89fa8f5b9
+ 7ced84a659a95454ce08b725af56331164e6b8673310e5a9a5c612576145456f
+ 98f25152be7305263189e1167c7b65a79328b335d1cf4861f592318a36d031ae"
+
+post_extract() {
+	mv openscad-${_commit} ${build_wrksrc}
+	rm -rf ${build_wrksrc}/libraries/MCAD ${build_wrksrc}/submodules/Clipper2
+	rm -rf ${build_wrksrc}/submodules/OpenCSG ${build_wrksrc}/submodules/manifold
+	rm -rf ${build_wrksrc}/submodules/mimalloc ${build_wrksrc}/submodules/sanitizers-cmake
+	mv MCAD-${_mcad} ${build_wrksrc}/libraries/MCAD
+	mv Clipper2-${_clipper2} ${build_wrksrc}/submodules/Clipper2
+	mv OpenCSG-${_opencsg} ${build_wrksrc}/submodules/OpenCSG
+	mv manifold-${_manifold} ${build_wrksrc}/submodules/manifold
+	mv mimalloc-${_mimalloc} ${build_wrksrc}/submodules/mimalloc
+	mv sanitizers-cmake-${_sanitizers_cmake} ${build_wrksrc}/submodules/sanitizers-cmake
+}

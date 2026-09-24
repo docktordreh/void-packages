@@ -5,7 +5,7 @@ set -euo pipefail
 REPO="bitwarden/clients"
 TPL="srcpkgs/bitwarden-desktop/template"
 
-echo "### Checking for bitwarden-desktop updates..."
+echo "Checking for bitwarden-desktop updates..."
 
 LATEST_TAG=$(
     gh api "repos/${REPO}/releases?per_page=100" --paginate \
@@ -73,4 +73,4 @@ mv "${TPL}.tmp" "$TPL"
 if [ -n "${GITHUB_ENV:-}" ]; then
     printf 'NEW_VERSION=%s\n' "$LATEST_VERSION" >> "$GITHUB_ENV"
 fi
-echo "### Done! bitwarden-desktop updated to $LATEST_VERSION"
+echo "Updated bitwarden-desktop to $LATEST_VERSION"

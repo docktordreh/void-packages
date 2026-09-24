@@ -7,13 +7,13 @@ metapackage=yes
 
 depends="linux-virt${version} linux-base"
 
-short_desc="VM-optimized Linux kernel meta package"
+short_desc="Linux kernel meta package for virtual machine guests"
 maintainer="Valentin Lechner <valentin_lechner@tutanota.de>"
 license="Public Domain"
 homepage="https://github.com/docktordreh/void-packages"
 
 linux-virt-headers_package() {
 	metapackage=yes
-	short_desc="VM-optimized Linux kernel headers meta package"
+	short_desc="Linux kernel headers meta package for virtual machine guests"
 	depends="linux-virt${version}-headers"
 }

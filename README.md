@@ -1,14 +1,13 @@
 # docktordreh/void-packages
 
-Unofficial package repository for **Void Linux**, focused on improving package availability for **aarch64**.
+Unofficial package repository for **Void Linux**. It adds packages that are unavailable or difficult to build on **aarch64**.
 
-Current scope:
+Current packages:
 
 * `bitwarden-desktop` for `aarch64` and `x86_64`
+* `openscad-dev` for `aarch64` and `x86_64`
 * `zen-browser` for `aarch64` and `x86_64`
-* `linux-virt`, a VM guest optimized kernel, coming for `aarch64` and `x86_64`
-
-The main motivation for this repository is to provide useful aarch64 packages that are otherwise missing or difficult to obtain on Void Linux.
+* `linux-virt`, a kernel for virtual machine guests on `aarch64` and `x86_64`
 
 [![Void Linux](https://img.shields.io/badge/Void_Linux-packages-478061?logo=linux)](https://voidlinux.org/)
 [![Build](https://img.shields.io/github/actions/workflow/status/docktordreh/void-packages/build.yml?label=build\&logo=githubactions)](https://github.com/docktordreh/void-packages/actions)
@@ -37,8 +36,9 @@ On first use, verify and accept the repository signing key fingerprint.
 | Package              | Architectures       | Description                                  |
 | -------------------- | ------------------- | -------------------------------------------- |
 | `bitwarden-desktop`  | `aarch64`, `x86_64` | Bitwarden password manager desktop client   |
+| `openscad-dev`       | `aarch64`, `x86_64` | Solid 3D CAD modeller                       |
 | `zen-browser`        | `aarch64`, `x86_64` | Zen Browser binary package                   |
-| `linux-virt`         | `aarch64`, `x86_64` | VM guest optimized Linux kernel              |
+| `linux-virt`         | `aarch64`, `x86_64` | Linux kernel for virtual machine guests      |
 | `linux-virt-headers` | `aarch64`, `x86_64` | Matching kernel headers                      |
 
 ### Zen Browser
@@ -49,13 +49,13 @@ Install with:
 sudo xbps-install zen-browser
 ```
 
-The package uses the upstream Zen Browser binaries for the respective architecture.
+The package uses the upstream Zen Browser binary for each architecture.
 
 ### linux-virt
 
-`linux-virt` is intended as a lean Void kernel flavor for virtual machine guests.
+`linux-virt` is a Void kernel flavor for virtual machine guests.
 
-It keeps general purpose guest and VirtIO functionality while removing unnecessary physical hardware support.
+It includes general-purpose guest and VirtIO support while omitting hardware support that virtual machines do not need.
 
 The package tracks Void's current kernel series and patch release. Its
 checked-in architecture configs are generated from Void's matching baseline

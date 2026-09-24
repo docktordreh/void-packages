@@ -1,4 +1,4 @@
-name: Package Request
+name: Package request
 description: Request a new package, update, or fix for the binary repository
 title: "[PKG] <package-name> - <new/update/fix> package"
 labels: ["package-request"]
@@ -8,19 +8,19 @@ body:
   - type: dropdown
     id: request_type
     attributes:
-      label: Request Type
+      label: Request type
       description: What kind of request is this?
       options:
-        - New Package
-        - Update Existing Package
-        - Fix / Rebuild
+        - New package
+        - Update existing package
+        - Fix or rebuild
     validations:
       required: true
 
   - type: input
     id: package_name
     attributes:
-      label: Package Name
+      label: Package name
       description: Exact XBPS package name
       placeholder: example-package
     validations:
@@ -47,7 +47,7 @@ body:
   - type: textarea
     id: additional_info
     attributes:
-      label: Additional Information
+      label: Additional information
       description: Anything else maintainers should know?
       placeholder: Notes, build flags, special instructions, etc.
     validations:
@@ -56,7 +56,7 @@ body:
   - type: checkboxes
     id: checks
     attributes:
-      label: Pre-submission Checklist
+      label: Pre-submission checklist
       options:
         - label: I have checked that this package/request does not already exist.
           required: true

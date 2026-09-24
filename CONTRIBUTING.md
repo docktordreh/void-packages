@@ -1,9 +1,7 @@
-# 🤝 How to contribute
+# How to contribute
 
-I'm so glad you're reading this, I'm doing my best, but help is always needed.
+To request a package or report a problem:
 
-Want a package added, or spotted something broken?
-
-- **Package updates** are handled (mostly) automatically by the workflow — no need to bump versions manually
-- **[Open an issue](https://github.com/sofijacom/void-package/issues/)** — request a new package or report a build failure
-- **[Submit a PR](https://github.com/sofijacom/void-package/pulls)** — add your own template following the existing structure and coding convention (one directory per package inside [srcpkgs](./srcpkgs/), containing a `template` file and if possible, a `update.sh`)
+- Package updates are handled automatically by GitHub Actions. You do not need to bump versions manually.
+- [Open an issue](https://github.com/docktordreh/void-packages/issues/) to request a package or report a build failure.
+- [Submit a pull request](https://github.com/docktordreh/void-packages/pulls/) with a package template that follows the existing structure. Each package belongs in its own directory under [srcpkgs](./srcpkgs/) and should contain a `template` file and, when needed, an `update.sh` script.

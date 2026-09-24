@@ -1,4 +1,4 @@
-name: 🏗️ Build Void Linux Packages
+name: Build Void Linux packages
 
 env:
   TAG: workflow-${{ github.run_id }}
@@ -31,7 +31,7 @@ concurrency:
 
 jobs:
   build:
-    name: Build📦 ${{ matrix.config.arch }}
+    name: Build ${{ matrix.config.arch }}
     runs-on: ${{ matrix.config.runs_on }}
     permissions:
       contents: write
@@ -65,7 +65,7 @@ jobs:
       #    restore-keys: |
       #      masterdir-${{ matrix.config.arch }}-
 
-      - name: 🧰 Prep container
+      - name: Prepare container
         run: |
           mkdir -p /etc/xbps.d && cp /usr/share/xbps.d/*-repository-*.conf /etc/xbps.d/
           env -u XBPS_TARGET_ARCH xbps-install -Syu xbps
@@ -74,14 +74,14 @@ jobs:
           printf '%s\n' 'repository=https://github.com/docktordreh/void-packages/releases/latest/download/' > /etc/xbps.d/docktordreh.conf
           useradd -G xbuilder -M builder -s $(which bash)
 
-      - name: 🔎 Checkout upstream Void packages
+      - name: Checkout upstream Void packages
         uses: actions/checkout@v6
         with:
           repository: void-linux/void-packages
           ref: master
           path: void-packages
 
-      - name: 🧩 Merge package overlay into local build tree
+      - name: Merge package overlay into local build tree
         working-directory: void-packages
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -133,7 +133,7 @@ jobs:
              done
            fi
 
-           # Clean up mismatched architectures so repodata generates correctly
+           # Clean up mismatched architectures before generating repodata.
           if [ "$ARCH" = "x86_64" ]; then
             rm --force hostdir/binpkgs/*x86_64-musl*
           elif [ "$ARCH" = "x86_64-musl" ]; then
@@ -141,7 +141,7 @@ jobs:
           fi
           rm --force hostdir/binpkgs/*.xbps.sig2
 
-      - name: 📋 Identify changes to build
+      - name: Identify changes to build
         working-directory: void-packages
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -153,8 +153,8 @@ jobs:
           else
             latest_sha=$(git rev-list --max-parents=0 "$REPO_OWNER/main")
           fi
-          echo "Latest Tag Name: ${latest_name}"
-          echo "Latest Tag SHA: ${latest_sha}"
+          echo "Latest tag: ${latest_name}"
+          echo "Latest tag commit: ${latest_sha}"
 
           chown -R builder:builder .
           if [ "$FORCE_KERNEL_METAPKG" = true ]; then
@@ -174,7 +174,7 @@ jobs:
             fi
           fi
 
-      - name: 🛠️ Setup void-packages
+      - name: Set up void-packages
         working-directory: void-packages
         run: |
           chown -R builder:builder .
@@ -186,42 +186,42 @@ jobs:
           echo 'XBPS_DISTDIR=$PWD/hostdir/distfiles' >> etc/conf
           echo 'XBPS_MASTERDIR_PKGS="$PWD/hostdir/binpkgs"' >> etc/conf
 
-      - name: 🔧 Prepare masterdir
+      - name: Prepare masterdir
         working-directory: void-packages
         run: |
           chown -R builder:builder .
           sudo -Eu builder ./xbps-src -m masterdir-${{ matrix.config.arch }} -A ${{ matrix.config.arch }} binary-bootstrap
 
-      # -------------------- Packages to build --------------------
+      # Build changed packages.
 
-      - name: 🗑️ Reset package cache & sync repos
+      - name: Reset package cache and sync repositories
         working-directory: void-packages
         run: |
           sudo -Eu builder ./xbps-src clean
 
-      - name: 📦 build pkgs
+      - name: Build packages
         working-directory: void-packages
         run: |
           set -eu
           while IFS= read -r pkg; do
             [ -n "$pkg" ] || continue
-            echo "🏗️ Building $pkg for $ARCH..."
+            echo "Building $pkg for $ARCH..."
             sudo -Eu builder ./xbps-src pkg -j "$(nproc)" \
               -m "masterdir-${{ matrix.config.arch }}" \
               -A "${{ matrix.config.arch }}" "$pkg"
           done < /tmp/templates
           if [ "$FORCE_KERNEL_METAPKG" = true ]; then
             for pkg in linux-virt linux-virt-headers; do
-              echo "🏗️ Building $pkg metapackage for $ARCH..."
+              echo "Building $pkg metapackage for $ARCH..."
               sudo -Eu builder ./xbps-src -1 pkg -j "$(nproc)" \
                 -m "masterdir-${{ matrix.config.arch }}" \
                 -A "${{ matrix.config.arch }}" "$pkg"
             done
           fi
 
-      # -----------------------------------------------------------
+      # Sign and publish packages.
 
-      - name: 🧾 Clean & sign
+      - name: Clean and sign
         working-directory: void-packages/hostdir/binpkgs
         env:
           PRIVKEY: ${{ secrets.PRIV_KEY }}
@@ -236,21 +236,21 @@ jobs:
           set -- *.xbps
 
           if [ ! -e "$1" ]; then
-            echo "❌ No XBPS packages found"
+            echo "No XBPS packages found."
             ls -la
             exit 1
           fi
 
-          echo "📦 Packages:"
+          echo "Packages:"
           printf '  %s\n' "$@"
 
-          # Ensure packages are registered and repodata exists.
+          # Register packages and create the repository index.
           sudo -Eu builder xbps-rindex --add "$@"
 
-          echo "📚 Repository data:"
+          echo "Repository data:"
           ls -l *-repodata
 
-          # Now these operations have an existing repository index.
+          # Remove obsolete packages after creating the repository index.
           sudo -Eu builder xbps-rindex --remove-obsoletes "${PWD}"
 
           # Obsolete packages may have been removed from the directory.
@@ -273,7 +273,7 @@ jobs:
 
           rm -f key.pem
 
-      - name: 🔢 checksum
+      - name: Generate checksums
         working-directory: void-packages/hostdir/binpkgs
         run: |
           set -eu
@@ -288,21 +288,21 @@ jobs:
             printf '%s\n' "${sha512%% *}" > "${file}.sha512sum"
           done
           if [ -z "$found" ]; then
-            echo "❌ No packages found to checksum."
+            echo "No packages found to checksum."
             exit 1
           fi
 
-      - name: 📤 Upload Artifact
+      - name: Upload artifact
         uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.config.arch }}-repodata
           path: void-packages/hostdir/binpkgs
 
-      - name: 🏷️ short sha
+      - name: Set short SHA
         run: |
           printf 'SHORT_SHA=%s\n' "$(printf '%s' "$SHA" | cut -c1-7)" >> "$GITHUB_ENV"
 
-      - name: 🚀 release
+      - name: Create release
         uses: softprops/action-gh-release@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -315,7 +315,7 @@ jobs:
             void-packages/hostdir/binpkgs/*repodata
 
   cleanup-releases:
-    name: 🧹 Cleanup old releases
+    name: Clean up old releases
     needs: build
     if: ${{ needs.build.result == 'success' }}
     runs-on: ubuntu-latest
