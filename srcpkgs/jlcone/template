@@ -17,7 +17,7 @@ checksum=bfb855c54c58d69fa0203d5295b012027d35d94383b23f5651f3d3b8d51694e8
 
 do_install() {
     vmkdir usr/bin
-    ar p "${XBPS_SRCDISTDIR}/jlcone-${version}.deb" data.tar.xz |
+    ar p "${XBPS_SRCDISTDIR}/${pkgname}-${version}/jlcone-${version}.deb" data.tar.xz |
         tar -xJf - -C "${DESTDIR}"
     ln -s /opt/JLCONE/jlcone "${DESTDIR}/usr/bin/jlcone"
 }
