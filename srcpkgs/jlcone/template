@@ -4,7 +4,7 @@ version=1.0.71
 revision=2
 archs="x86_64"
 hostmakedepends="binutils tar xz"
-depends="alsa-lib at-spi2-core gtk+3 libX11 libXss libXtst libdrm libnotify
+depends="alsa-lib at-spi2-core gtk+3 libX11 libXScrnSaver libXtst libdrm libnotify
  libsecret libuuid mesa nss xdg-utils"
 short_desc="JLCPCB desktop client"
 maintainer="Valentin Lechner <valentin_lechner@tutanota.de>"

@@ -214,6 +214,16 @@ jobs:
           set -eu
           while IFS= read -r pkg; do
             [ -n "$pkg" ] || continue
+            supported_archs=$(sed -n 's/^archs="\(.*\)"/\1/p' "srcpkgs/${pkg}/template")
+            if [ -n "$supported_archs" ]; then
+              case " ${supported_archs} " in
+                *" ${ARCH} "*) ;;
+                *)
+                  echo "Skipping ${pkg} for unsupported architecture ${ARCH}."
+                  continue
+                  ;;
+              esac
+            fi
             echo "Building $pkg for $ARCH..."
             sudo -Eu builder ./xbps-src pkg -j "$(nproc)" \
               -m "masterdir-${{ matrix.config.arch }}" \
