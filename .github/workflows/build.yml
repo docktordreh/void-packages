@@ -169,9 +169,18 @@ jobs:
             fi
             if [ -s /tmp/changed-packages ]; then
               xargs sudo -Eu builder ./xbps-src sort-dependencies < /tmp/changed-packages > /tmp/templates
+              while IFS= read -r package; do
+                if ! grep -Fxq "$package" /tmp/templates; then
+                  printf '%s\n' "$package" >> /tmp/templates
+                fi
+              done < /tmp/changed-packages
             else
               : > /tmp/templates
             fi
+            echo "Changed packages:"
+            cat /tmp/changed-packages
+            echo "Build order:"
+            cat /tmp/templates
           fi
 
       - name: Set up void-packages
