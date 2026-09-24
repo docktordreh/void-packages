@@ -1,0 +1,23 @@
+# Template file for 'jlcone'
+pkgname=jlcone
+version=1.0.71
+revision=1
+archs="x86_64"
+hostmakedepends="binutils tar xz"
+depends="alsa-lib at-spi2-core gtk+3 libX11 libXss libXtst libdrm libnotify
+ libsecret libuuid mesa nss xdg-utils"
+short_desc="JLCPCB desktop client"
+maintainer="Valentin Lechner <valentin_lechner@tutanota.de>"
+license="ISC"
+homepage="https://jlcone.com/download"
+nostrip=yes
+
+distfiles="https://rs.jlcone.com/static/APP/app_version/jlcone-${version}.deb"
+checksum=bfb855c54c58d69fa0203d5295b012027d35d94383b23f5651f3d3b8d51694e8
+
+do_install() {
+    vmkdir usr/bin
+    ar p "${XBPS_SRCDIR}/jlcone-${version}.deb" data.tar.xz |
+        tar -xJf - -C "${DESTDIR}"
+    ln -s /opt/JLCONE/jlcone "${DESTDIR}/usr/bin/jlcone"
+}

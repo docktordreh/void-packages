@@ -5,6 +5,7 @@ Unofficial package repository for **Void Linux**. It adds packages that are unav
 Current packages:
 
 * `bitwarden-desktop` for `aarch64` and `x86_64`
+* `jlcone` for `x86_64`
 * `openscad-dev` for `aarch64` and `x86_64`
 * `zen-browser` for `aarch64` and `x86_64`
 * `linux-virt`, a kernel for virtual machine guests on `aarch64` and `x86_64`
@@ -36,6 +37,7 @@ On first use, verify and accept the repository signing key fingerprint.
 | Package              | Architectures       | Description                                  |
 | -------------------- | ------------------- | -------------------------------------------- |
 | `bitwarden-desktop`  | `aarch64`, `x86_64` | Bitwarden password manager desktop client   |
+| `jlcone`             | `x86_64`            | JLCPCB desktop client                       |
 | `openscad-dev`       | `aarch64`, `x86_64` | Solid 3D CAD modeller                       |
 | `zen-browser`        | `aarch64`, `x86_64` | Zen Browser binary package                   |
 | `linux-virt`         | `aarch64`, `x86_64` | Linux kernel for virtual machine guests      |
