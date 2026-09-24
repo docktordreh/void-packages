@@ -1,7 +1,7 @@
 # Template file for 'openscad-dev'
 pkgname=openscad-dev
 version=2026.09.23
-revision=7
+revision=8
 _commit=28fe66bcaf3e89239153cd16c34499c541d2841e
 _mcad=1ea402208c3127ffb443931e9bb1681c191dacca
 _clipper2=c7f820f6a03fa91f189b866d27bf40dfe47abaa6
@@ -17,7 +17,7 @@ configure_args="-DENABLE_TESTS=OFF -DUSE_CCACHE=OFF -DUSE_QT6=ON
  -DCMAKE_REQUIRE_FIND_PACKAGE_Lib3MF=OFF -DSNAPSHOT=ON -DSUFFIX=nightly
  -DOPENSCAD_VERSION=${version} -DOPENSCAD_COMMIT=${_commit}"
 hostmakedepends="bison flex gettext gettext-devel pkg-config qt6-base-devel"
-makedepends="cgal-devel double-conversion-devel eigen
+makedepends="cgal-devel gmp-devel double-conversion-devel eigen
  boost-devel-minimal libboost_regex libboost_program_options
  harfbuzz-devel fontconfig-devel libglib-devel glew-devel
  opencsg-devel qscintilla-qt6-devel qt6-base-devel qt6-multimedia-devel
