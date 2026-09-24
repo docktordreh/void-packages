@@ -1,7 +1,7 @@
 # Template file for 'openscad-dev'
 pkgname=openscad-dev
 version=2026.09.23
-revision=6
+revision=7
 _commit=28fe66bcaf3e89239153cd16c34499c541d2841e
 _mcad=1ea402208c3127ffb443931e9bb1681c191dacca
 _clipper2=c7f820f6a03fa91f189b866d27bf40dfe47abaa6
@@ -13,7 +13,7 @@ build_wrksrc=openscad
 build_style=cmake
 configure_args="-DENABLE_TESTS=OFF -DUSE_CCACHE=OFF -DUSE_QT6=ON
  -DUSE_BUILTIN_OPENCSG=OFF -DUSE_GLAD=OFF -DUSE_GLEW=ON
- -DENABLE_CGAL=OFF -DUSE_MANIFOLD_MINKOWSKI=ON
+ -DENABLE_CGAL=ON -DUSE_MANIFOLD_MINKOWSKI=ON
  -DCMAKE_REQUIRE_FIND_PACKAGE_Lib3MF=OFF -DSNAPSHOT=ON -DSUFFIX=nightly
  -DOPENSCAD_VERSION=${version} -DOPENSCAD_COMMIT=${_commit}"
 hostmakedepends="bison flex gettext gettext-devel pkg-config qt6-base-devel"
