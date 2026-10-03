@@ -24,6 +24,7 @@ on:
       - main
     paths:
       - srcpkgs/**
+      - .github/workflows/build.yml
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -71,7 +72,7 @@ jobs:
           env -u XBPS_TARGET_ARCH xbps-install -Syu xbps
           env -u XBPS_TARGET_ARCH xbps-install -yu
           env -u XBPS_TARGET_ARCH xbps-install -y sudo bash curl grep jq zip unzip git github-cli xtools coreutils
-          printf '%s\n' 'repository=https://github.com/docktordreh/void-packages/releases/latest/download/' > /etc/xbps.d/docktordreh.conf
+          printf '%s\n' 'repository=https://github.com/docktordreh/void-packages/releases/latest/download' > /etc/xbps.d/docktordreh.conf
           useradd -G xbuilder -M builder -s $(which bash)
 
       - name: Checkout upstream Void packages
@@ -94,19 +95,23 @@ jobs:
           mkdir -p hostdir/binpkgs
 
           latest_release=$(gh release list --limit 1 --json tagName --jq '.[0].tagName // empty' --repo "$REPO_OWNER/$REPO_NAME")
+          rm -f /tmp/missing-arch-repodata
            if [ -n "$latest_release" ]; then
              release_assets=$(gh release view "$latest_release" --json assets --jq '.assets[].name' --repo "$REPO_OWNER/$REPO_NAME")
-            has_arch_asset=
-            case "$release_assets" in
-              *"$ARCH"*) has_arch_asset=1;;
-            esac
-            if [ -n "$has_arch_asset" ]; then
+             if printf '%s\n' "$release_assets" | grep -Fqx "${ARCH}-repodata"; then
               gh release download "$latest_release" --pattern "*${ARCH}*" --dir hostdir/binpkgs --repo "$REPO_OWNER/$REPO_NAME"
             else
               echo "No previous ${ARCH} assets found; starting with an empty local repository."
-            fi
+              : > /tmp/missing-arch-repodata
+             fi
+             if ! printf '%s\n' "$release_assets" | grep -Fqx aarch64-repodata \
+               || ! printf '%s\n' "$release_assets" | grep -Fqx x86_64-repodata; then
+              echo "Repository metadata is incomplete; rebuilding all architectures."
+              : > /tmp/missing-arch-repodata
+             fi
            else
              echo "No previous release found; starting with an empty local repository."
+            : > /tmp/missing-arch-repodata
            fi
 
            kernel_pkg_prefix="linux-virt$(sed -n 's/^version=//p' srcpkgs/linux-virt/template)"
@@ -160,7 +165,12 @@ jobs:
           if [ "$FORCE_KERNEL_METAPKG" = true ]; then
             : > /tmp/templates
           else
-            git diff-tree -r --no-renames --name-only --diff-filter=AM "$latest_sha" "$SHA" -- 'srcpkgs/**' > /tmp/changed-files
+            if [ -e /tmp/missing-arch-repodata ]; then
+              echo "Rebuilding overlay packages because ${ARCH}-repodata is missing."
+              git diff --name-only HEAD -- 'srcpkgs/*/template' > /tmp/changed-files
+            else
+              git diff-tree -r --no-renames --name-only --diff-filter=AM "$latest_sha" "$SHA" -- 'srcpkgs/**' > /tmp/changed-files
+            fi
             cut -d/ -f 2 /tmp/changed-files | sort -u > /tmp/changed-packages
             meta_target="linux-virt$(sed -n 's/^version=//p' srcpkgs/linux-virt/template)"
             if [ "$FORCE_KERNEL" = true ]; then

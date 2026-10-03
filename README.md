@@ -20,7 +20,7 @@ Add the repository:
 
 ```sh
 printf '%s\n' \
-  'repository=https://github.com/docktordreh/void-packages/releases/latest/download/' \
+  'repository=https://github.com/docktordreh/void-packages/releases/latest/download' \
   | sudo tee /etc/xbps.d/docktordreh.conf
 ```
 
