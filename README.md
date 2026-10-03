@@ -8,6 +8,7 @@ Current packages:
 * `jlcone` for `x86_64`
 * `openscad-dev` for `aarch64` and `x86_64`
 * `zen-browser` for `aarch64` and `x86_64`
+* `vagrant` for `aarch64`
 * `linux-virt`, a kernel for virtual machine guests on `aarch64` and `x86_64`
 
 [![Void Linux](https://img.shields.io/badge/Void_Linux-packages-478061?logo=linux)](https://voidlinux.org/)
@@ -40,6 +41,7 @@ On first use, verify and accept the repository signing key fingerprint.
 | `jlcone`             | `x86_64`            | JLCPCB desktop client                       |
 | `openscad-dev`       | `aarch64`, `x86_64` | Solid 3D CAD modeller                       |
 | `zen-browser`        | `aarch64`, `x86_64` | Zen Browser binary package                   |
+| `vagrant`            | `aarch64`           | Tool for building development environments   |
 | `linux-virt`         | `aarch64`, `x86_64` | Linux kernel for virtual machine guests      |
 | `linux-virt-headers` | `aarch64`, `x86_64` | Matching kernel headers                      |
 
@@ -52,6 +54,18 @@ sudo xbps-install zen-browser
 ```
 
 The package uses the upstream Zen Browser binary for each architecture.
+
+### vagrant
+
+Void only ships `vagrant` in its `nonfree` repository for `x86_64`. This
+package mirrors Void's template and builds it for `aarch64`; the updater tracks
+Void's version, revision and checksum.
+
+Install with:
+
+```sh
+sudo xbps-install vagrant
+```
 
 ### linux-virt
 
