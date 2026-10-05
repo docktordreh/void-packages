@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if ! command -v git >/dev/null 2>&1; then
+	echo "Required command not found: git" >&2
+	exit 1
+fi
+
+caller_dir=$PWD
+output_dir=${OUTPUT_DIR:-$caller_dir}
+case "$output_dir" in
+	/*) ;;
+	*) output_dir="$caller_dir/$output_dir" ;;
+esac
+repository=${VOID_PACKAGES_REPOSITORY:-https://github.com/void-linux/void-packages.git}
+ref=${VOID_PACKAGES_REF:-master}
+workdir=$(mktemp -d "${TMPDIR:-/tmp}/void-packages-google-chrome.XXXXXX")
+trap 'rm -rf "$workdir"' EXIT
+
+echo "Cloning void-linux/void-packages ($ref)..."
+git clone --depth 1 --branch "$ref" "$repository" "$workdir/void-packages"
+
+cd "$workdir/void-packages"
+mkdir -p etc
+printf '%s\n' 'XBPS_ALLOW_RESTRICTED=yes' >> etc/conf
+
+./xbps-src binary-bootstrap
+./xbps-src pkg google-chrome
+
+shopt -s nullglob
+packages=(
+	hostdir/binpkgs/google-chrome-*.xbps
+	hostdir/binpkgs/nonfree/google-chrome-*.xbps
+)
+if (( ${#packages[@]} == 0 )); then
+	echo "The google-chrome package was not produced." >&2
+	exit 1
+fi
+
+mkdir -p "$output_dir"
+for package in "${packages[@]}"; do
+	cp -v "$package" "$output_dir/"
+done

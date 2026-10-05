@@ -55,6 +55,21 @@ sudo xbps-install zen-browser
 
 The package uses the upstream Zen Browser binary for each architecture.
 
+## Build Google Chrome locally
+
+`bin/build-google-chrome` clones the current upstream `void-packages` tree into
+a temporary directory, enables restricted packages, and builds `google-chrome`.
+The resulting `.xbps` file is copied to the directory where you run the command.
+
+Run it from any directory:
+
+```sh
+/path/to/void-packages/bin/build-google-chrome
+```
+
+Set `OUTPUT_DIR` to choose another destination. The build requires Git and the
+normal tools used by `xbps-src`.
+
 ### vagrant
 
 Void only ships `vagrant` in its `nonfree` repository for `x86_64`. This
