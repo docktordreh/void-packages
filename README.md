@@ -9,6 +9,8 @@ Current packages:
 * `openscad-dev` for `aarch64` and `x86_64`
 * `zen-browser` for `aarch64` and `x86_64`
 * `vagrant` for `aarch64`
+* `steam` (Valve's native arm64 client) for `aarch64`
+* `xwayland-satellite` with a fix for stale X screen sizes, for `aarch64` and `x86_64`
 * `linux-virt`, a kernel for virtual machine guests on `aarch64` and `x86_64`
 
 [![Void Linux](https://img.shields.io/badge/Void_Linux-packages-478061?logo=linux)](https://voidlinux.org/)
@@ -42,6 +44,8 @@ On first use, verify and accept the repository signing key fingerprint.
 | `openscad-dev`       | `aarch64`, `x86_64` | Solid 3D CAD modeller                       |
 | `zen-browser`        | `aarch64`, `x86_64` | Zen Browser binary package                   |
 | `vagrant`            | `aarch64`           | Tool for building development environments   |
+| `steam`              | `aarch64`           | Valve's native arm64 Steam client           |
+| `xwayland-satellite` | `aarch64`, `x86_64` | Xwayland for niri, with the stale-size fix   |
 | `linux-virt`         | `aarch64`, `x86_64` | Linux kernel for virtual machine guests      |
 | `linux-virt-headers` | `aarch64`, `x86_64` | Matching kernel headers                      |
 
@@ -80,6 +84,38 @@ Install with:
 
 ```sh
 sudo xbps-install vagrant
+```
+
+### steam
+
+Void ships `steam` for x86 only. This package installs Valve's launcher files
+with Valve's native arm64 client (the one the Steam Frame runs) as the
+bootstrap. Valve has not announced this client for desktop Linux. On first
+start, `steam` unpacks it to `~/.local/share/Steam`, and the client then
+updates itself from Valve's `linuxarm64` channel. The updater follows Valve's
+`steam_client_linuxarm64` manifest and the launcher version in Void's
+template.
+
+Native arm64 games run directly. x86 games depend on the compatibility tools
+(Proton, FEX) the client downloads itself; this package does not add an x86
+emulator.
+
+```sh
+sudo xbps-install -S steam
+```
+
+### xwayland-satellite
+
+Void's `xwayland-satellite` with
+[Supreeeme/xwayland-satellite#495](https://github.com/Supreeeme/xwayland-satellite/pull/495).
+On niri and other Smithay-based compositors, the X screen lagged one output
+mode change behind, so X11 apps kept the previous size after a resize, for
+example after resizing a VM window. The updater tracks Void's template and
+uses its revision plus one, so this build replaces Void's package of the same
+version. Remove the package once a release with the fix reaches Void.
+
+```sh
+sudo xbps-install -Su xwayland-satellite
 ```
 
 ### linux-virt
