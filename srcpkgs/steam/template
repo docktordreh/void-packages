@@ -1,0 +1,54 @@
+# Template file for 'steam'
+#
+# Void ships steam for x86 only (nonfree). This is the aarch64 build: Valve's
+# launcher files (desktop entry, icons, docs) with Valve's native arm64 client
+# as the bootstrap instead of the x86 one. The client updates itself from
+# Valve's linuxarm64 channel; _client only decides what the first launch
+# unpacks. update.sh moves it to the build Valve's manifest publishes.
+pkgname=steam
+version=1.0.0.87
+revision=1
+_client=1788652215
+_client_zip=bins_linuxarm64_linuxarm64.zip.dc817d33f8308815bf4fde6a3cb61fd4529728c8
+archs="aarch64"
+wrksrc=steam-launcher
+hostmakedepends="bsdtar tar xz"
+# Host libraries the arm64 client loads, and lsof, which it runs to find its
+# own IPC ports.
+depends="alsa-lib at-spi2-core bash cairo coreutils dbus fontconfig freetype
+ gdk-pixbuf glib gtk+ hicolor-icon-theme libcups libdrm libgcc libglvnd libibus
+ libnm libpipewire libpulseaudio libSM libstdc++ libva libvdpau libX11
+ libXcomposite libXdamage libXext libXfixes libXi libXinerama libxkbcommon
+ libXrandr libXrender libXtst lsof mesa-dri nss libopenal pango SDL2
+ eudev-libudev tar liberation-fonts-ttf vulkan-loader xdg-user-dirs xz
+ steam-udev-rules"
+short_desc="Digital distribution client - Valve's native arm64 Steam client"
+maintainer="docktordreh <valentin_lechner@dismail.de>"
+license="custom:Proprietary"
+homepage="https://steampowered.com/"
+distfiles="http://repo.steampowered.com/steam/pool/steam/s/steam/steam_${version}.tar.gz
+ https://client-update.steamstatic.com/${_client_zip}>steam-client-${_client}.zip"
+# The client checksum is the sha2 Valve's steam_client_linuxarm64 manifest
+# lists for that zip.
+checksum="649375d2f9377f8009aaf3e2ff09978041eb9114897d9c5a3886f1d82e27ba1f
+ c2d7c0ecb8de7e209504cd657b785127cd1ac3d905668c296e87c360b2b54163"
+skip_extraction="steam-client-${_client}.zip"
+nostrip=yes
+
+do_build() {
+	# The arm64 counterpart of bootstraplinux_ubuntu12_32.tar.xz. The client
+	# binary links only glibc and downloads the rest of Steam itself.
+	mkdir -p bootstrap
+	bsdtar -xf "${XBPS_SRCDISTDIR}/${pkgname}-${version}/steam-client-${_client}.zip" \
+		-C bootstrap steamrtarm64/steam
+	chmod 755 bootstrap/steamrtarm64 bootstrap/steamrtarm64/steam
+	tar --sort=name --mtime="@${SOURCE_DATE_EPOCH:-0}" --owner=0 --group=0 \
+		--numeric-owner -cJf bootstraplinux_linuxarm64.tar.xz -C bootstrap steamrtarm64
+}
+
+do_install() {
+	make DESTDIR=${DESTDIR} install-docs install-icons install-desktop install-appdata
+	vbin ${FILESDIR}/steam.sh steam
+	vinstall bootstraplinux_linuxarm64.tar.xz 644 usr/lib/steam
+	vlicense steam_subscriber_agreement.txt LICENSE
+}
