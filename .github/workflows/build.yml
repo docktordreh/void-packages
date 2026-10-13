@@ -238,6 +238,9 @@ jobs:
             sudo -Eu builder ./xbps-src pkg -j "$(nproc)" \
               -m "masterdir-${{ matrix.config.arch }}" \
               -A "${{ matrix.config.arch }}" "$pkg" < /dev/null
+            if [ "$pkg" = openscad-dev ]; then
+              : > /tmp/openscad-dev-built
+            fi
           done < /tmp/templates
           if [ "$FORCE_KERNEL_METAPKG" = true ]; then
             for pkg in linux-virt linux-virt-headers; do
@@ -302,6 +305,28 @@ jobs:
           sudo -Eu builder xbps-rindex --clean "${PWD}"
 
           rm -f key.pem
+
+      - name: Verify OpenSCAD CGAL ABI
+        if: ${{ hashFiles('void-packages/hostdir/binpkgs/*.xbps') != '' }}
+        working-directory: void-packages/hostdir/binpkgs
+        run: |
+          set -eu
+          if [ ! -e /tmp/openscad-dev-built ]; then
+            echo 'openscad-dev was not rebuilt; skipping ABI verification.'
+            exit 0
+          fi
+          shlib_requires=$(xbps-query --repository "$PWD" -p shlib-requires openscad-dev)
+          run_depends=$(xbps-query --repository "$PWD" -p run_depends openscad-dev)
+          printf '%s\n' "$shlib_requires"
+          printf '%s\n' "$run_depends"
+          if printf '%s\n' "$shlib_requires" | grep -Fxq 'libCGAL.so.13'; then
+            echo 'openscad-dev still links against the obsolete CGAL 4 ABI.' >&2
+            exit 1
+          fi
+          if ! printf '%s\n' "$run_depends" | grep -Fxq 'cgal>=6.2.1_1'; then
+            echo 'openscad-dev is not constrained to the current CGAL package.' >&2
+            exit 1
+          fi
 
       - name: Generate checksums
         if: ${{ hashFiles('void-packages/hostdir/binpkgs/*.xbps') != '' }}
