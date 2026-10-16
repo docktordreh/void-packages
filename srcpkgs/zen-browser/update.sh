@@ -22,8 +22,8 @@ URL_X86="https://github.com/$REPO/releases/download/${LATEST_VERSION}/zen.linux-
 URL_AARCH64="https://github.com/$REPO/releases/download/${LATEST_VERSION}/zen.linux-aarch64.tar.xz"
 
 echo "Calculating checksums..."
-CHK_X86=$(curl -L -s "$URL_X86" | sha256sum | awk '{print $1}')
-CHK_AARCH64=$(curl -L -s "$URL_AARCH64" | sha256sum | awk '{print $1}')
+CHK_X86=$(curl --fail --location --silent --show-error --retry 3 "$URL_X86" | sha256sum | awk '{print $1}')
+CHK_AARCH64=$(curl --fail --location --silent --show-error --retry 3 "$URL_AARCH64" | sha256sum | awk '{print $1}')
 
 if [ -z "$CHK_X86" ] || [ -z "$CHK_AARCH64" ]; then
     echo "Error: Failed to fetch checksums."
