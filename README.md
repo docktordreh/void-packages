@@ -12,6 +12,7 @@ Current packages:
 * `steam` (Valve's native arm64 client) for `aarch64`
 * `xwayland-satellite` with a fix for stale X screen sizes, for `aarch64` and `x86_64`
 * `linux-virt`, a kernel for virtual machine guests on `aarch64` and `x86_64`
+* `sbx`, Docker Sandboxes CLI for `aarch64` and `x86_64`
 
 [![Void Linux](https://img.shields.io/badge/Void_Linux-packages-478061?logo=linux)](https://voidlinux.org/)
 [![Build](https://img.shields.io/github/actions/workflow/status/docktordreh/void-packages/build.yml?label=build\&logo=githubactions)](https://github.com/docktordreh/void-packages/actions)
@@ -48,6 +49,7 @@ On first use, verify and accept the repository signing key fingerprint.
 | `xwayland-satellite` | `aarch64`, `x86_64` | Xwayland for niri, with the stale-size fix   |
 | `linux-virt`         | `aarch64`, `x86_64` | Linux kernel for virtual machine guests      |
 | `linux-virt-headers` | `aarch64`, `x86_64` | Matching kernel headers                      |
+| `sbx`                | `aarch64`, `x86_64` | Docker Sandboxes CLI                        |
 
 ### Zen Browser
 
