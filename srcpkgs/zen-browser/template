@@ -1,6 +1,6 @@
 # Template file for 'zen-browser'
 pkgname=zen-browser
-version=1.23.2b
+version=1.23.3b
 revision=1
 archs="x86_64 aarch64"
 hostmakedepends="binutils tar xz curl"
@@ -13,7 +13,7 @@ changelog="https://github.com/zen-browser/desktop/releases"
 case "$XBPS_TARGET_MACHINE" in
 aarch64*)
     distfiles="https://github.com/zen-browser/desktop/releases/download/${version}/zen.linux-aarch64.tar.xz"
-    checksum="96971f099c0adeae6a2edb4e128596d0706df974ac279b5ecde2aa93b07621d8"
+    checksum="bb2045d3e21654d40fe841250092eeadfd2c1fc831eefb509222773c8bdca149"
     ;;
 x86_64*)
     distfiles="https://github.com/zen-browser/desktop/releases/download/${version}/zen.linux-x86_64.tar.xz"
