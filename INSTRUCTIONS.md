@@ -22,28 +22,3 @@
 20. `do_install()` installs files into `${DESTDIR}`. It usually uses `make install`, `cargo install`, or the selected `build_style`.
 21. `post_install()` performs final package changes, such as creating runit scripts, copying licenses, removing unwanted files, and installing headers or pkg-config files. Use `${PKGDESTDIR}` for new files and `${DESTDIR}` to adjust files that are already installed.
 22. `do_clean()` removes temporary files.
-
-## Порядок вызова хуков в шаблоне
-
-1. `pre_fetch()` выполняется до скачивания исходников. Используется редко.
-2. `do_fetch()` скачивает архивы из distfiles. Обычно его предоставляет `build_style`, поэтому переопределяется редко.
-3. `post_fetch()` выполняется после скачивания и до распаковки.
-4. `pre_extract()` выполняется до распаковки архива.
-5. `do_extract()` распаковывает архив в `$wrksrc`. Обычно его предоставляет `build_style`.
-6. `post_extract()` выполняется после распаковки и до применения патчей.
-7. `pre_patch()` выполняется до применения патчей из каталога `patches/`.
-8. `do_patch()` применяет патчи. Обычно его предоставляет `build_style`.
-9. `post_patch()` выполняется после патчей и до настройки проекта. Здесь часто редактируют файлы с помощью `sed`.
-10. `pre_configure()` выполняется до настройки проекта, например через `./configure` или `cmake`.
-11. `do_configure()` запускает настройку проекта. Обычно `build_style` обрабатывает ее с помощью `configure_args`.
-12. `post_configure()` выполняется после настройки и до сборки.
-13. `pre_build()` выполняется до компиляции. Здесь можно изменить Makefile или кэш CMake.
-14. `do_build()` компилирует проект командами `make`, `cargo build` или `ninja`. Обычно его предоставляет `build_style`.
-15. `post_build()` выполняется после компиляции и до тестов.
-16. `pre_check()` выполняется до запуска тестов.
-17. `do_check()` запускает тесты, например `make check`, `ctest` или `cargo test`. По умолчанию тесты часто отключены.
-18. `post_check()` выполняется после тестов и до установки.
-19. `pre_install()` выполняется до установки файлов в `${DESTDIR}`.
-20. `do_install()` устанавливает файлы в `${DESTDIR}`. Обычно используются `make install`, `cargo install` или выбранный `build_style`.
-21. `post_install()` вносит последние изменения в пакет: создает скрипты runit, копирует лицензии, удаляет ненужные файлы и устанавливает заголовки или pkg-config. Для новых файлов используется `${PKGDESTDIR}`, а для изменения уже установленных файлов `${DESTDIR}`.
-22. `do_clean()` удаляет временные файлы.
