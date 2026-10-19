@@ -13,11 +13,11 @@ changelog="https://github.com/zen-browser/desktop/releases"
 case "$XBPS_TARGET_MACHINE" in
 aarch64*)
     distfiles="https://github.com/zen-browser/desktop/releases/download/${version}/zen.linux-aarch64.tar.xz"
-    checksum="bb2045d3e21654d40fe841250092eeadfd2c1fc831eefb509222773c8bdca149"
+    checksum="1100cb3e857254edba833a293eb50010de66a166465edfcdcc8536dde732dfa7"
     ;;
 x86_64*)
     distfiles="https://github.com/zen-browser/desktop/releases/download/${version}/zen.linux-x86_64.tar.xz"
-    checksum="5e67f4fa081b1b437243c464449ea1bd2a3b15b6f932487a8aa0c25aa8514600"
+    checksum="bb2045d3e21654d40fe841250092eeadfd2c1fc831eefb509222773c8bdca149"
     ;;
 *)
     broken="Unsupported architecture: ${XBPS_TARGET_MACHINE}"
