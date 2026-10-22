@@ -7,9 +7,9 @@
 # unpacks. update.sh moves it to the build Valve's manifest publishes.
 pkgname=steam
 version=1.0.0.87
-revision=2
-_client=1791918634
-_client_zip=bins_linuxarm64_linuxarm64.zip.5a9a95afdc2ee6a000092a6205716b0f6efe899c
+revision=3
+_client=1792618285
+_client_zip=bins_linuxarm64_linuxarm64.zip.426e3ea97690dd3ddacbfb4b509a4ca9e916b62d
 archs="aarch64"
 wrksrc=steam-launcher
 hostmakedepends="bsdtar tar xz"
@@ -31,7 +31,7 @@ distfiles="http://repo.steampowered.com/steam/pool/steam/s/steam/steam_${version
 # The client checksum is the sha2 Valve's steam_client_linuxarm64 manifest
 # lists for that zip.
 checksum="649375d2f9377f8009aaf3e2ff09978041eb9114897d9c5a3886f1d82e27ba1f
- 8b31d0b0aa844d906b690283da41403b601a9b36b1f80b7819d1f85bb27854fc"
+ a77faaf185f7b0681886d1c30e989d2cd1821cea421d41556e733b9d065b85a1"
 skip_extraction="steam-client-${_client}.zip"
 nostrip=yes
 
