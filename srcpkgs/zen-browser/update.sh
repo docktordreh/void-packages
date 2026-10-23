@@ -15,17 +15,24 @@ if [ "$LATEST_VERSION" != "$CURRENT_VERSION" ]; then
     echo "Update found: $CURRENT_VERSION -> $LATEST_VERSION"
 fi
 
-URL_X86="https://github.com/$REPO/releases/download/${LATEST_VERSION}/zen.linux-x86_64.tar.xz"
-URL_AARCH64="https://github.com/$REPO/releases/download/${LATEST_VERSION}/zen.linux-aarch64.tar.xz"
+asset_digest() {
+    local asset=$1
+    local digest
 
-echo "Calculating checksums..."
-CHK_X86=$(curl --fail --location --silent --show-error --retry 3 "$URL_X86" | sha256sum | awk '{print $1}')
-CHK_AARCH64=$(curl --fail --location --silent --show-error --retry 3 "$URL_AARCH64" | sha256sum | awk '{print $1}')
+    digest=$(gh api "repos/$REPO/releases/latest" \
+        --jq ".assets[] | select(.name == \"$asset\") | .digest // empty")
+    case "$digest" in
+        sha256:*) printf '%s\n' "${digest#sha256:}" ;;
+        *)
+            echo "Error: GitHub did not provide a SHA256 digest for $asset." >&2
+            return 1
+            ;;
+    esac
+}
 
-if [ -z "$CHK_X86" ] || [ -z "$CHK_AARCH64" ]; then
-    echo "Error: Failed to fetch checksums."
-    exit 1
-fi
+echo "Reading GitHub release asset digests..."
+CHK_X86=$(asset_digest zen.linux-x86_64.tar.xz)
+CHK_AARCH64=$(asset_digest zen.linux-aarch64.tar.xz)
 
 echo "Checksums: x86_64=$CHK_X86 aarch64=$CHK_AARCH64"
 
@@ -51,8 +58,14 @@ awk -v version="$LATEST_VERSION" -v revision="$revision" \
   -v chk_aarch="$CHK_AARCH64" -v chk_x86="$CHK_X86" '
   /^version=/ { print "version=" version; next }
   /^revision=/ { print "revision=" revision; next }
-  /^[[:space:]]*checksum=/ && n_checksums == 0 { sub(/checksum=.*/, "checksum=\"" chk_aarch "\""); n_checksums++ }
-  /^[[:space:]]*checksum=/ && n_checksums == 1 { sub(/checksum=.*/, "checksum=\"" chk_x86 "\""); n_checksums++ }
+  /^[[:space:]]*checksum=/ {
+    if (n_checksums == 0) {
+      sub(/checksum=.*/, "checksum=\"" chk_aarch "\"")
+    } else if (n_checksums == 1) {
+      sub(/checksum=.*/, "checksum=\"" chk_x86 "\"")
+    }
+    n_checksums++
+  }
   { print }
 ' "$TPL" > "${TPL}.tmp" && mv "${TPL}.tmp" "$TPL"
 
