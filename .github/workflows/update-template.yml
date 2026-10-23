@@ -44,6 +44,7 @@ jobs:
     name: Update ${{ matrix.pkg.name }}
     runs-on: ubuntu-latest
     permissions:
+      actions: write
       contents: write
     needs: find-autoupdates
     if: ${{ needs.find-autoupdates.outputs.matrix != '[]' }}
@@ -170,3 +171,9 @@ jobs:
         with:
           github_token: ${{ github.token }}
           branch: ${{ github.ref }}
+
+      - name: Trigger package build
+        if: steps.check-updates.outputs.has_updates == 'true'
+        run: gh workflow run build.yml --ref main
+        env:
+          GH_TOKEN: ${{ github.token }}
