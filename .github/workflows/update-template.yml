@@ -83,6 +83,7 @@ jobs:
   commit-updates:
     runs-on: ubuntu-latest
     permissions:
+      actions: write
       contents: write
     needs:
       - update-versions
