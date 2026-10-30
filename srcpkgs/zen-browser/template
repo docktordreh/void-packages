@@ -1,7 +1,7 @@
 # Template file for 'zen-browser'
 pkgname=zen-browser
-version=1.23.4b
-revision=3
+version=1.24b
+revision=1
 archs="x86_64 aarch64"
 hostmakedepends="binutils tar xz curl"
 short_desc="Privacy-focused web browser based on Firefox"
@@ -13,11 +13,11 @@ changelog="https://github.com/zen-browser/desktop/releases"
 case "$XBPS_TARGET_MACHINE" in
 aarch64*)
     distfiles="https://github.com/zen-browser/desktop/releases/download/${version}/zen.linux-aarch64.tar.xz"
-    checksum="75142191e0ad3380e485a39a3737b502e69cf30368fbb516b80e7e6f0b0f3a5f"
+    checksum="ec2ff40a809d698d190e58a32b6273b564c1af9c24db1b2442327eab7dcd6f66"
     ;;
 x86_64*)
     distfiles="https://github.com/zen-browser/desktop/releases/download/${version}/zen.linux-x86_64.tar.xz"
-    checksum="ba81dd70af70d645f2f0a692f7fa4510f819290abfd8d8e60273d3d5a60d0536"
+    checksum="323f2682e73e38247a51fbcc75e5628ed2bb9b404db00cf9cf16af329a916fae"
     ;;
 *)
     broken="Unsupported architecture: ${XBPS_TARGET_MACHINE}"
