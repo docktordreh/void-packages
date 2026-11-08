@@ -251,10 +251,20 @@ jobs:
             done
           fi
 
+      - name: Check for built packages
+        id: packages
+        working-directory: void-packages
+        run: |
+          if find hostdir/binpkgs -maxdepth 1 -type f -name '*.xbps' -print -quit | grep -q .; then
+            echo 'built=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'built=false' >> "$GITHUB_OUTPUT"
+          fi
+
       # Sign and publish packages.
 
       - name: Clean and sign
-        if: ${{ hashFiles('void-packages/hostdir/binpkgs/*.xbps') != '' }}
+        if: ${{ steps.packages.outputs.built == 'true' }}
         working-directory: void-packages/hostdir/binpkgs
         env:
           PRIVKEY: ${{ secrets.PRIV_KEY }}
@@ -307,7 +317,7 @@ jobs:
           rm -f key.pem
 
       - name: Verify OpenSCAD CGAL ABI
-        if: ${{ hashFiles('void-packages/hostdir/binpkgs/*.xbps') != '' }}
+        if: ${{ steps.packages.outputs.built == 'true' }}
         working-directory: void-packages/hostdir/binpkgs
         run: |
           set -eu
@@ -329,7 +339,7 @@ jobs:
           fi
 
       - name: Generate checksums
-        if: ${{ hashFiles('void-packages/hostdir/binpkgs/*.xbps') != '' }}
+        if: ${{ steps.packages.outputs.built == 'true' }}
         working-directory: void-packages/hostdir/binpkgs
         run: |
           set -eu
@@ -349,19 +359,19 @@ jobs:
           fi
 
       - name: Upload artifact
-        if: ${{ hashFiles('void-packages/hostdir/binpkgs/*.xbps') != '' }}
+        if: ${{ steps.packages.outputs.built == 'true' }}
         uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.config.arch }}-repodata
           path: void-packages/hostdir/binpkgs
 
       - name: Set short SHA
-        if: ${{ hashFiles('void-packages/hostdir/binpkgs/*.xbps') != '' }}
+        if: ${{ steps.packages.outputs.built == 'true' }}
         run: |
           printf 'SHORT_SHA=%s\n' "$(printf '%s' "$SHA" | cut -c1-7)" >> "$GITHUB_ENV"
 
       - name: Create release
-        if: ${{ hashFiles('void-packages/hostdir/binpkgs/*.xbps') != '' }}
+        if: ${{ steps.packages.outputs.built == 'true' }}
         uses: softprops/action-gh-release@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
