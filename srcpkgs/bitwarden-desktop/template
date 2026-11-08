@@ -11,6 +11,8 @@ license="GPL-3.0-only"
 homepage="https://bitwarden.com/"
 changelog="https://github.com/bitwarden/clients/releases"
 nostrip=yes
+# The archive includes a musl-only optional prebuild for utf-8-validate.
+skiprdeps="/usr/lib/${pkgname}/resources/app.asar.unpacked/node_modules/utf-8-validate/prebuilds/linux-x64/utf-8-validate.musl.node"
 
 case "$XBPS_TARGET_MACHINE" in
 aarch64*)
