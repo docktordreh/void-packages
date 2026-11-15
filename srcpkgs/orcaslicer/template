@@ -1,0 +1,44 @@
+# Template file for 'orcaslicer'
+pkgname=orcaslicer
+version=2.5.1
+revision=1
+archs="x86_64 aarch64"
+build_style=cmake
+wrksrc="OrcaSlicer-${version}"
+hostmakedepends="autoconf automake cmake extra-cmake-modules file gettext git
+ libtool m4 ninja pkg-config python3"
+makedepends="dbus-devel eglexternalplatform eudev-libudev-devel gtk+3-devel
+ gst-plugins-base1-devel gstreamer1-devel libcurl-devel libmspack-devel
+ libsecret-devel libspnav-devel MesaLib-devel openssl-devel libwebkit2gtk41-devel"
+depends="gtk+3 libsecret libwebkit2gtk41"
+short_desc="G-code generator for 3D printers"
+maintainer="Valentin Lechner <valentin_lechner@tutanota.de>"
+license="AGPL-3.0-only"
+homepage="https://www.orcaslicer.com/"
+changelog="https://github.com/OrcaSlicer/OrcaSlicer/releases"
+distfiles="https://github.com/OrcaSlicer/OrcaSlicer/archive/refs/tags/v${version}.tar.gz"
+checksum="7f04a53c7680816d2b54063dc4b88950607e5486240f2d0292919f8b6652cdb3"
+
+do_configure() {
+	cmake -S deps -B deps/build -G Ninja \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DDEP_WX_GTK3=ON
+}
+
+do_build() {
+	cmake --build deps/build --parallel "${XBPS_MAKEJOBS}"
+	cmake -S . -B build -G "Ninja Multi-Config" \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DSLIC3R_FHS=ON \
+		-DSLIC3R_PCH=OFF \
+		-DORCA_TOOLS=ON
+	cmake --build build --config Release --parallel "${XBPS_MAKEJOBS}" \
+		--target OrcaSlicer OrcaSlicer_profile_validator generate_system_cache
+	./scripts/run_gettext.sh
+}
+
+do_install() {
+	DESTDIR="${DESTDIR}" cmake --install build --config Release --prefix /usr
+	vlicense LICENSE.txt
+}
