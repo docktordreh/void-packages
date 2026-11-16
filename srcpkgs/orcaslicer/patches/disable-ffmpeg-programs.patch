@@ -1,0 +1,10 @@
+--- a/deps/FFMPEG/FFMPEG.cmake
++++ b/deps/FFMPEG/FFMPEG.cmake
+@@ -82,6 +82,7 @@ else ()
+             ${_minos_cmd}
+             ${_openssl_cmd}
+             --disable-doc
++            --disable-programs
+             --enable-small
+             --disable-outdevs
+             --disable-filters
