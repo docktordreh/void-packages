@@ -6,7 +6,7 @@ archs="x86_64 aarch64"
 build_style=cmake
 wrksrc="OrcaSlicer-${version}"
 hostmakedepends="autoconf automake cmake extra-cmake-modules file gettext git
- libtool m4 ninja pkg-config python3"
+ libtool m4 ninja pkg-config python3 texinfo"
 makedepends="dbus-devel eglexternalplatform eudev-libudev-devel gtk+3-devel
  gst-plugins-base1-devel gstreamer1-devel libcurl-devel libmspack-devel
  libsecret-devel libspnav-devel MesaLib-devel openssl-devel libwebkit2gtk41-devel"
