@@ -10,6 +10,10 @@ hostmakedepends="autoconf automake cmake extra-cmake-modules file gettext git
 makedepends="dbus-devel eglexternalplatform eudev-libudev-devel gtk+3-devel
  gst-plugins-base1-devel gstreamer1-devel libcurl-devel libmspack-devel
  libsecret-devel libspnav-devel MesaLib-devel openssl-devel libwebkit2gtk41-devel"
+# Boost's binary-float headers include quadmath.h on x86_64.
+if [ "$XBPS_TARGET_MACHINE" = x86_64 ]; then
+	makedepends+=" libquadmath-devel"
+fi
 depends="gtk+3 libsecret libwebkit2gtk41"
 short_desc="G-code generator for 3D printers"
 maintainer="Valentin Lechner <valentin_lechner@tutanota.de>"
@@ -27,7 +31,9 @@ do_configure() {
 
 do_build() {
 	cmake --build deps/build --parallel "${XBPS_MAKEJOBS}"
-	cmake -S . -B build -G "Ninja Multi-Config" \
+	# Orca's FHS install rules expect copied FFmpeg shared libraries in build/src.
+	# Its multi-config helper stages them in build/src/Release instead.
+	cmake -S . -B build -G Ninja \
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DSLIC3R_FHS=ON \
