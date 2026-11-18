@@ -1,0 +1,43 @@
+# Template file for 'hex'
+pkgname=hex
+version=3.4.0
+revision=1
+archs="x86_64 aarch64"
+wrksrc=hex-ef17921a287dbb237bf2398ff70e0352ba6a8f2f
+build_style=cargo
+hostmakedepends="cargo cargo-auditable cmake clang pkg-config python3 shaderc"
+makedepends="alsa-lib-devel fontconfig-devel freetype-devel libX11-devel
+ libxcb-devel libXcursor-devel libXi-devel libXrandr-devel libxkbcommon-devel
+ openblas-devel openssl-devel SPIRV-Headers Vulkan-Headers vulkan-loader-devel
+ wayland-devel"
+depends="alsa-lib ffmpeg fontconfig freetype libX11 libxcb libXcursor libXi
+ libXrandr libva libxkbcommon openblas openssl pipewire vulkan-loader wayland
+ wl-clipboard wtype"
+short_desc="Local voice dictation"
+maintainer="Valentin Lechner <valentin_lechner@tutanota.de>"
+license="MIT"
+homepage="https://anoma.ly/hex/"
+changelog="https://github.com/anomalyco/hex/releases"
+distfiles="https://github.com/docktordreh/hex/archive/ef17921a287dbb237bf2398ff70e0352ba6a8f2f.tar.gz"
+checksum=8aa87722e7f7407ed397309ecc4e2ae362a81e9139e943493b4a2d47cd2c8204
+make_build_args="--bin hex"
+make_check=no # Tests include GPU and desktop-session requirements.
+
+export BLA_VENDOR=OpenBLAS
+export OPENSSL_NO_VENDOR=1
+
+do_install() {
+	vbin "target/${RUST_TARGET}/release/hex"
+	vlicense LICENSE
+	vinstall packaging/anomaly.hex.desktop 644 usr/share/applications
+	vinstall packaging/hex.service 644 usr/lib/systemd/user
+	vinstall packaging/runit/hex/run 755 usr/share/hex/runit/hex
+	vinstall packaging/runit/README.md 644 usr/share/doc/hex/runit
+	vsed -i "s|@HEX_BIN@|/usr/bin/hex|g" \
+		"${DESTDIR}/usr/share/applications/anomaly.hex.desktop"
+	for icon in packaging/linux/icons/hicolor/*/apps/anomaly.hex.png; do
+		size=${icon#packaging/linux/icons/hicolor/}
+		size=${size%%/*}
+		vinstall "$icon" 644 "usr/share/icons/hicolor/${size}/apps"
+	done
+}

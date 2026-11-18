@@ -5,6 +5,7 @@ env:
   SHA: ${{ github.sha }}
   FORCE_KERNEL: ${{ inputs.force_kernel || false }}
   FORCE_KERNEL_METAPKG: ${{ inputs.force_kernel_metapkg || false }}
+  PACKAGE: ${{ inputs.package || '' }}
 
 on:
   workflow_dispatch:
@@ -19,6 +20,10 @@ on:
         required: false
         type: boolean
         default: false
+      package:
+        description: Build only this package and its dependencies (for example, hex)
+        required: false
+        type: string
   push:
     branches:
       - main
@@ -53,6 +58,7 @@ jobs:
         XBPS_TARGET_ARCH: '${{ matrix.config.arch }}'
         FORCE_KERNEL: '${{ env.FORCE_KERNEL }}'
         FORCE_KERNEL_METAPKG: '${{ env.FORCE_KERNEL_METAPKG }}'
+        PACKAGE: '${{ env.PACKAGE }}'
         REPO_OWNER: "${{ github.repository_owner }}"
         REPO_NAME: "${{ github.event.repository.name }}"
     if: ${{ github.ref == 'refs/heads/main' }}
@@ -165,7 +171,19 @@ jobs:
           if [ "$FORCE_KERNEL_METAPKG" = true ]; then
             : > /tmp/templates
           else
-            if [ -e /tmp/missing-arch-repodata ]; then
+            if [ -n "$PACKAGE" ]; then
+              case "$PACKAGE" in
+                *[!a-zA-Z0-9+_.-]*|'')
+                  echo "Invalid package name: $PACKAGE" >&2
+                  exit 1
+                  ;;
+              esac
+              if [ ! -f "srcpkgs/${PACKAGE}/template" ]; then
+                echo "No template found for package: $PACKAGE" >&2
+                exit 1
+              fi
+              printf 'srcpkgs/%s/template\n' "$PACKAGE" > /tmp/changed-files
+            elif [ -e /tmp/missing-arch-repodata ]; then
               echo "Rebuilding overlay packages because ${ARCH}-repodata is missing."
               git diff --name-only HEAD -- 'srcpkgs/*/template' > /tmp/changed-files
             else

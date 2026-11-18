@@ -14,6 +14,7 @@ Current packages:
 * `linux-virt`, a kernel for virtual machine guests on `aarch64` and `x86_64`
 * `sbx`, Docker Sandboxes CLI for `aarch64` and `x86_64`
 * `orcaslicer`, G-code generator for `aarch64` and `x86_64`
+* `hex`, local voice dictation for `aarch64` and `x86_64`
 
 [![Void Linux](https://img.shields.io/badge/Void_Linux-packages-478061?logo=linux)](https://voidlinux.org/)
 [![Build](https://img.shields.io/github/actions/workflow/status/docktordreh/void-packages/build.yml?label=build\&logo=githubactions)](https://github.com/docktordreh/void-packages/actions)
@@ -52,6 +53,27 @@ On first use, verify and accept the repository signing key fingerprint.
 | `linux-virt-headers` | `aarch64`, `x86_64` | Matching kernel headers                      |
 | `sbx`                | `aarch64`, `x86_64` | Docker Sandboxes CLI                        |
 | `orcaslicer`         | `aarch64`, `x86_64` | G-code generator for 3D printers             |
+| `hex`                | `aarch64`, `x86_64` | Local voice dictation                       |
+
+### Hex
+
+Install Hex with:
+
+```sh
+sudo xbps-install hex
+```
+
+Hex runs as the logged-in user. To have runit manage it with turnstile, link
+the packaged service into the user's service directory and check its status:
+
+```sh
+mkdir -p ~/.config/service
+ln -s /usr/share/hex/runit/hex ~/.config/service/hex
+sv status ~/.config/service/hex
+```
+
+The package is built from a pinned commit of the runit-enabled Hex fork for
+both supported architectures.
 
 ### Zen Browser
 
@@ -144,6 +166,8 @@ REGENERATE_CONFIGS=1 bash srcpkgs/linux-virt6.18/update.sh
 ## Automation
 
 GitHub Actions handles package builds, signing, releases, and automatic updates where supported.
+The Build workflow also accepts a `package` dispatch input to build one named
+package and its dependencies without rebuilding other pending packages.
 
 ## Disclaimer
 
