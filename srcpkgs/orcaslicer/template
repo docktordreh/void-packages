@@ -48,5 +48,9 @@ do_build() {
 
 do_install() {
 	DESTDIR="${DESTDIR}" cmake --install build --config Release --prefix /usr
+	# Orca links to bundled libpython, but its FHS install rules omit that runtime.
+	vmkdir usr/libpython
+	cp -a deps/build/OrcaSlicer_dep/usr/local/libpython/. "${DESTDIR}/usr/libpython/"
+	ln -s /usr/libpython "${DESTDIR}/usr/share/OrcaSlicer/python"
 	vlicense LICENSE.txt
 }
