@@ -29,7 +29,8 @@ fi
 
 asset_url() {
     gh api "repos/${REPO}/releases/tags/${LATEST_TAG}" \
-        --jq ".assets[] | select(.name == \"$1\") | .browser_download_url"
+        --jq ".assets[] | select(.name == \"$1\" or .name == \"bit-$1\") | .browser_download_url" |
+        head -n1
 }
 
 URL_AARCH64=$(asset_url "bitwarden_${LATEST_VERSION}_arm64.tar.gz")
