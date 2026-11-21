@@ -4,6 +4,7 @@ version=2.5.1
 revision=1
 archs="x86_64 aarch64"
 build_style=cmake
+python_version=ignore
 wrksrc="OrcaSlicer-${version}"
 hostmakedepends="autoconf automake cmake extra-cmake-modules file gettext git
  libtool m4 nasm ninja pkg-config python3 texinfo"
