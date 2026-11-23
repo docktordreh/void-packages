@@ -1,13 +1,13 @@
 # Template file for 'orcaslicer'
 pkgname=orcaslicer
 version=2.5.1
-revision=1
+revision=2
 archs="x86_64 aarch64"
 build_style=cmake
 python_version=ignore
 wrksrc="OrcaSlicer-${version}"
 hostmakedepends="autoconf automake cmake extra-cmake-modules file gettext git
- libtool m4 nasm ninja pkg-config python3 texinfo"
+ libtool m4 nasm ninja patchelf pkg-config python3 texinfo"
 makedepends="dbus-devel eglexternalplatform eudev-libudev-devel gtk+3-devel
  gst-plugins-base1-devel gstreamer1-devel libcurl-devel libmspack-devel
  libsecret-devel libspnav-devel MesaLib-devel openssl-devel libwebkit2gtk41-devel"
@@ -16,6 +16,7 @@ if [ "$XBPS_TARGET_MACHINE" = x86_64 ]; then
 	makedepends+=" libquadmath-devel"
 fi
 depends="gtk+3 libsecret libwebkit2gtk41"
+noshlibprovides=yes # Bundled libraries are private to OrcaSlicer.
 # Orca resolves its bundled uv from the resources directory at runtime.
 ignore_elf_files="/usr/share/OrcaSlicer/tools/uv/uv"
 short_desc="G-code generator for 3D printers"
@@ -34,11 +35,11 @@ do_configure() {
 
 do_build() {
 	cmake --build deps/build --parallel "${XBPS_MAKEJOBS}"
-	# Orca's FHS install rules expect copied FFmpeg shared libraries in build/src.
-	# Its multi-config helper stages them in build/src/Release instead.
+	# Single-config Ninja stages FFmpeg in build/src for the install rule.
 	cmake -S . -B build -G Ninja \
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_INSTALL_LIBDIR=lib \
 		-DSLIC3R_FHS=ON \
 		-DSLIC3R_PCH=OFF \
 		-DORCA_TOOLS=ON
@@ -48,7 +49,15 @@ do_build() {
 }
 
 do_install() {
+	local lib
+
 	DESTDIR="${DESTDIR}" cmake --install build --config Release --prefix /usr
+	# The executable's RUNPATH does not cover dependencies between FFmpeg libraries.
+	for lib in "${DESTDIR}"/usr/lib/orcaslicer/*.so.*; do
+		[ -L "$lib" ] && continue
+		patchelf --set-rpath "\$ORIGIN" "$lib"
+	done
+
 	# Orca links to bundled libpython, but its FHS install rules omit that runtime.
 	vmkdir usr/libpython
 	cp -a deps/build/OrcaSlicer_dep/usr/local/libpython/. "${DESTDIR}/usr/libpython/"
