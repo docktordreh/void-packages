@@ -1,6 +1,6 @@
 # Template file for 'sbx'
 pkgname=sbx
-version=0.54.0
+version=0.54.1
 revision=1
 archs="x86_64 aarch64"
 wrksrc=docker-sbx
@@ -18,11 +18,11 @@ fi
 case "$XBPS_TARGET_MACHINE" in
 x86_64*)
     distfiles="https://github.com/docker/sbx-releases/releases/download/v${version}/DockerSandboxes-linux-amd64.tar.gz"
-    checksum=eded29017121a857c98d4a91cad593f6a9e00f4010e830679bd385f4a5edba4d
+    checksum=98ebf37efac8def632439ae54a90a8cb76bd602ec470e839779487828857aeae
     ;;
 aarch64*)
     distfiles="https://github.com/docker/sbx-releases/releases/download/v${version}/DockerSandboxes-linux-arm64.tar.gz"
-    checksum=40498341fd6b7f67d8f6ff4b1a17c73f516811fc6184a3bd554f9b3442a91115
+    checksum=9b7e4788a8ef8304a2bf5c781adb0aa5b6542c6f9d6318a53bd476e1e0998bf2
     ;;
 *)
     broken="Unsupported architecture: ${XBPS_TARGET_MACHINE}"
