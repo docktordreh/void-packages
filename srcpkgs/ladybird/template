@@ -1,0 +1,41 @@
+# Template file for 'ladybird'
+pkgname=ladybird
+version=2026.47.7
+revision=1
+archs="aarch64 x86_64"
+short_desc="Independent web browser (alpha)"
+maintainer="Valentin Lechner <valentin_lechner@tutanota.de>"
+license="BSD-2-Clause"
+homepage="https://ladybird.org/"
+changelog="https://ladybird.org/posts/alpha/"
+nostrip=yes
+noshlibprovides=yes
+# The bundled Qt uses a different private ABI than Void's Qt. List only
+# external runtime dependencies instead of scanning against Void's Qt ABI.
+noverifyrdeps=yes
+depends="ca-certificates glib glibc>=2.39 libatomic libdrm libgcc>=14
+ libglvnd liberation-fonts-ttf libpulseaudio libstdc++>=13.2 libX11 libxcb
+ libxkbcommon libxkbcommon-x11 vulkan-loader wayland xcb-util xcb-util-cursor
+ xcb-util-image xcb-util-keysyms xcb-util-renderutil xcb-util-wm"
+
+case "$XBPS_TARGET_MACHINE" in
+	aarch64)
+		_debarch=arm64
+		checksum=7550a3a13f6a5455a00422017423f3a8c6e995fd6843806bb841fc5c5bd4949c
+		;;
+	x86_64)
+		_debarch=amd64
+		checksum=67e33f0a234b672734b8965ea7dd5c63c8f0b616313b91d43522c53ad686b1d4
+		;;
+esac
+
+_commit=4e9acf4c02ca23239fe32224a303dcea4614562b
+distfiles="https://apt.ladybird.org/pool/main/l/ladybird/ladybird_${version}-1~ubuntu24.04_${_debarch}.deb
+ https://raw.githubusercontent.com/LadybirdBrowser/ladybird/${_commit}/LICENSE>LICENSE.txt"
+checksum+=" 275f18944ac7ba41acabbb468387c1c9e8e2f81f7d49e6442dafe37c25ffeea7"
+
+do_install() {
+	vcopy opt /
+	vcopy usr /
+	vlicense LICENSE.txt LICENSE
+}

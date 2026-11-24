@@ -6,6 +6,7 @@ Current packages:
 
 * `bitwarden-desktop` for `aarch64` and `x86_64`
 * `jlcone` for `x86_64`
+* `ladybird` for `aarch64` and `x86_64`
 * `openscad-dev` for `aarch64` and `x86_64`
 * `zen-browser` for `aarch64` and `x86_64`
 * `vagrant` for `aarch64`
@@ -44,6 +45,7 @@ On first use, verify and accept the repository signing key fingerprint.
 | -------------------- | ------------------- | -------------------------------------------- |
 | `bitwarden-desktop`  | `aarch64`, `x86_64` | Bitwarden password manager desktop client   |
 | `jlcone`             | `x86_64`            | JLCPCB desktop client                       |
+| `ladybird`           | `aarch64`, `x86_64` | Ladybird web browser (alpha)                 |
 | `openscad-dev`       | `aarch64`, `x86_64` | Solid 3D CAD modeller                       |
 | `zen-browser`        | `aarch64`, `x86_64` | Zen Browser binary package                   |
 | `vagrant`            | `aarch64`           | Tool for building development environments   |
@@ -84,6 +86,16 @@ sudo xbps-install zen-browser
 ```
 
 The package uses the upstream Zen Browser binary for each architecture.
+
+### Ladybird
+
+```sh
+sudo xbps-install ladybird
+```
+
+The package repackages the official Ladybird alpha binaries for glibc-based
+Void Linux. The version is pinned and excluded from this repository’s
+automatic updater.
 
 ## Build Google Chrome locally
 
