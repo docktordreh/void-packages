@@ -1,0 +1,34 @@
+# Template file for 'pandoc'
+# Void's optional pandoc-sidenote and pandoc-crossref filters are not in
+# the binary tarball. If needed, build them natively against this version
+# of Pandoc; Void's pinned pandoc-crossref has no Linux ARM64 release asset.
+pkgname=pandoc
+version=3.6
+revision=1
+archs="aarch64"
+nostrip=yes
+short_desc="Universal converter between markup formats"
+maintainer="Valentin Lechner <valentin_lechner@tutanota.de>"
+license="GPL-2.0-or-later, BSD-3-Clause"
+homepage="https://pandoc.org/"
+changelog="https://pandoc.org/releases.html"
+distfiles="https://github.com/jgm/pandoc/releases/download/${version}/pandoc-${version}-linux-arm64.tar.gz
+ https://raw.githubusercontent.com/jgm/pandoc/${version}/COPYRIGHT"
+checksum="4377731a0c896193aeab75734fd5965c21232638fde117f30e4d591700405e0f
+ e9dd2c20808f570f0fe3c06b36246711e253543ba4eda22c8cc934addd007b48"
+skip_extraction="COPYRIGHT"
+
+pre_patch() {
+	# Ignore the source-build patches left by the upstream Void overlay.
+	PATCHESDIR="${wrksrc}/.no-patches"
+}
+
+do_install() {
+	vbin bin/pandoc
+	ln -s pandoc "${DESTDIR}/usr/bin/pandoc-lua"
+	ln -s pandoc "${DESTDIR}/usr/bin/pandoc-server"
+	vman share/man/man1/pandoc.1.gz
+	vman share/man/man1/pandoc-lua.1.gz
+	vman share/man/man1/pandoc-server.1.gz
+	vlicense "${XBPS_SRCDISTDIR}/${pkgname}-${version}/COPYRIGHT" LICENSE
+}

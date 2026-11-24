@@ -8,6 +8,7 @@ Current packages:
 * `jlcone` for `x86_64`
 * `ladybird` for `aarch64` and `x86_64`
 * `openscad-dev` for `aarch64` and `x86_64`
+* `pandoc` for `aarch64`
 * `zen-browser` for `aarch64` and `x86_64`
 * `vagrant` for `aarch64`
 * `steam` (Valve's native arm64 client) for `aarch64`
@@ -47,6 +48,7 @@ On first use, verify and accept the repository signing key fingerprint.
 | `jlcone`             | `x86_64`            | JLCPCB desktop client                       |
 | `ladybird`           | `aarch64`, `x86_64` | Ladybird web browser (alpha)                 |
 | `openscad-dev`       | `aarch64`, `x86_64` | Solid 3D CAD modeller                       |
+| `pandoc`             | `aarch64`           | Universal converter between markup formats  |
 | `zen-browser`        | `aarch64`, `x86_64` | Zen Browser binary package                   |
 | `vagrant`            | `aarch64`           | Tool for building development environments   |
 | `steam`              | `aarch64`           | Valve's native arm64 Steam client           |
@@ -124,6 +126,16 @@ Install with:
 sudo xbps-install vagrant
 ```
 
+### Pandoc
+
+```sh
+sudo xbps-install pandoc
+```
+
+This package repackages Pandoc's Linux ARM64 release tarball for `aarch64`.
+The updater tracks the version and revision in Void's Pandoc template.
+Void's separate Pandoc filter packages are not included.
+
 ### steam
 
 Void ships `steam` for x86 only. This package installs Valve's launcher files
@@ -178,8 +190,9 @@ REGENERATE_CONFIGS=1 bash srcpkgs/linux-virt6.18/update.sh
 ## Automation
 
 GitHub Actions handles package builds, signing, releases, and automatic updates where supported.
-The Build workflow also accepts a `package` dispatch input to build one named
-package and its dependencies without rebuilding other pending packages.
+The Build workflow also accepts a comma-separated `package` dispatch input
+(for example, `ladybird,pandoc`) to build only those packages and their
+dependencies. Other pending changes remain queued for the next full build.
 
 ## Disclaimer
 

@@ -21,7 +21,7 @@ on:
         type: boolean
         default: false
       package:
-        description: Build only this package and its dependencies (for example, hex)
+        description: Build only these packages and their dependencies (comma-separated, e.g. ladybird,pandoc)
         required: false
         type: string
   push:
@@ -161,6 +161,11 @@ jobs:
           latest_name=$(gh release list --limit 1 --json tagName --jq '.[0].tagName // empty' --repo "$REPO_OWNER/$REPO_NAME")
           if [ -n "$latest_name" ]; then
             latest_sha=$(git rev-list --max-count=1 "$latest_name")
+            release_body=$(gh release view "$latest_name" --json body --jq .body)
+            baseline=$(printf '%s\n' "$release_body" | sed -n 's/^<!-- build-baseline: \([0-9a-f]\{40\}\) -->$/\1/p')
+            if [ -n "$baseline" ]; then
+              latest_sha=$(git rev-parse --verify "$baseline^{commit}")
+            fi
           else
             latest_sha=$(git rev-list --max-parents=0 "$REPO_OWNER/main")
           fi
@@ -172,17 +177,23 @@ jobs:
             : > /tmp/templates
           else
             if [ -n "$PACKAGE" ]; then
-              case "$PACKAGE" in
-                *[!a-zA-Z0-9+_.-]*|'')
-                  echo "Invalid package name: $PACKAGE" >&2
+              # A scoped release must not consume unrelated pending changes.
+              printf 'BUILD_BASELINE=%s\n' "$latest_sha" >> "$GITHUB_ENV"
+              printf '%s' "$PACKAGE" | tr ',' '\n' > /tmp/requested-packages
+              printf '\n' >> /tmp/requested-packages
+              while IFS= read -r package; do
+                case "$package" in
+                  ''|[!a-zA-Z0-9]*|*[!a-zA-Z0-9+_.-]*)
+                    echo "Invalid package name: $package" >&2
+                    exit 1
+                    ;;
+                esac
+                if [ ! -f "srcpkgs/${package}/template" ]; then
+                  echo "No template found for package: $package" >&2
                   exit 1
-                  ;;
-              esac
-              if [ ! -f "srcpkgs/${PACKAGE}/template" ]; then
-                echo "No template found for package: $PACKAGE" >&2
-                exit 1
-              fi
-              printf 'srcpkgs/%s/template\n' "$PACKAGE" > /tmp/changed-files
+                fi
+                printf 'srcpkgs/%s/template\n' "$package"
+              done < /tmp/requested-packages > /tmp/changed-files
             elif [ -e /tmp/missing-arch-repodata ]; then
               echo "Rebuilding overlay packages because ${ARCH}-repodata is missing."
               git diff --name-only HEAD -- 'srcpkgs/*/template' > /tmp/changed-files
@@ -396,6 +407,8 @@ jobs:
         with:
           name: ${{ env.SHORT_SHA }}
           tag_name: ${{ env.TAG }}
+          body: >-
+            ${{ env.BUILD_BASELINE && format('<!-- build-baseline: {0} -->', env.BUILD_BASELINE) || '' }}
           files: |
             void-packages/hostdir/binpkgs/*.xbps
             void-packages/hostdir/binpkgs/*.sig2
