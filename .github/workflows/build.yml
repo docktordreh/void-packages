@@ -161,7 +161,7 @@ jobs:
           latest_name=$(gh release list --limit 1 --json tagName --jq '.[0].tagName // empty' --repo "$REPO_OWNER/$REPO_NAME")
           if [ -n "$latest_name" ]; then
             latest_sha=$(git rev-list --max-count=1 "$latest_name")
-            release_body=$(gh release view "$latest_name" --json body --jq .body)
+            release_body=$(gh release view "$latest_name" --json body --jq .body --repo "$REPO_OWNER/$REPO_NAME")
             baseline=$(printf '%s\n' "$release_body" | sed -n 's/^<!-- build-baseline: \([0-9a-f]\{40\}\) -->$/\1/p')
             if [ -n "$baseline" ]; then
               latest_sha=$(git rev-parse --verify "$baseline^{commit}")
