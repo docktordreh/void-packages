@@ -5,6 +5,7 @@ Unofficial package repository for **Void Linux**. It adds packages that are unav
 Current packages:
 
 * `bitwarden-desktop` for `aarch64` and `x86_64`
+* `fluffychat`, a Matrix messaging client for `aarch64` and `x86_64`
 * `jlcone` for `x86_64`
 * `ladybird` for `aarch64` and `x86_64`
 * `openscad-dev` for `aarch64` and `x86_64`
@@ -45,6 +46,7 @@ On first use, verify and accept the repository signing key fingerprint.
 | Package              | Architectures       | Description                                  |
 | -------------------- | ------------------- | -------------------------------------------- |
 | `bitwarden-desktop`  | `aarch64`, `x86_64` | Bitwarden password manager desktop client   |
+| `fluffychat`         | `aarch64`, `x86_64` | FluffyChat Matrix messaging client          |
 | `jlcone`             | `x86_64`            | JLCPCB desktop client                       |
 | `ladybird`           | `aarch64`, `x86_64` | Ladybird web browser (alpha)                 |
 | `openscad-dev`       | `aarch64`, `x86_64` | Solid 3D CAD modeller                       |
@@ -58,6 +60,14 @@ On first use, verify and accept the repository signing key fingerprint.
 | `sbx`                | `aarch64`, `x86_64` | Docker Sandboxes CLI                        |
 | `orcaslicer`         | `aarch64`, `x86_64` | G-code generator for 3D printers             |
 | `hex`                | `aarch64`, `x86_64` | Local voice dictation                       |
+
+### FluffyChat
+
+Install with `sudo xbps-install fluffychat`. The package uses the official
+[FluffyChat 2.11.3 Linux bundles and source release](https://github.com/krille-chan/fluffychat/releases/tag/v2.11.3).
+Newer Linux bundles require a newer glibc than Void currently ships.
+For local database encryption, run a Secret Service provider such as
+`gnome-keyring` in your desktop session.
 
 ### Hex
 

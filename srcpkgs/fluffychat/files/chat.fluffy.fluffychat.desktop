@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=FluffyChat
+GenericName=Matrix Client
+Comment=Chat with your friends
+Exec=fluffychat
+Icon=chat.fluffy.fluffychat
+Terminal=false
+Categories=Network;Chat;InstantMessaging;
+Keywords=Matrix;Chat;Messenger;

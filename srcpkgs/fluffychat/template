@@ -1,0 +1,69 @@
+# Template file for 'fluffychat'
+# ponytail: Keep this pinned until newer upstream bundles run on Void's glibc.
+# The 2.11.5 and 2.11.6 Linux bundles require glibc 2.43; Void ships 2.41.
+pkgname=fluffychat
+version=2.11.3
+revision=1
+archs="aarch64 x86_64"
+depends="ca-certificates ffmpeg6 hicolor-icon-theme libglvnd libstdc++>=13.2
+ mpv pulseaudio-utils"
+short_desc="Matrix messaging client"
+maintainer="Valentin Lechner <valentin_lechner@tutanota.de>"
+license="AGPL-3.0-or-later AND Apache-2.0 AND CC-BY-4.0"
+homepage="https://fluffychat.im/"
+changelog="https://github.com/krille-chan/fluffychat/releases"
+noshlibprovides=yes
+
+case "$XBPS_TARGET_MACHINE" in
+	aarch64)
+		_arch=arm64
+		checksum=fd9e06b56050fc2f328fc5e035f7f07017ddeee3aecee3ec25e8cbd1e0435449
+		;;
+	x86_64)
+		_arch=x64
+		checksum=92b704cf946666587e0c6ae87546d43d3ebd79378ccbbdb4c7b82cacbde95ad0
+		;;
+esac
+
+_github="https://github.com/krille-chan/fluffychat"
+_raw="https://raw.githubusercontent.com/krille-chan/fluffychat/v${version}"
+distfiles="${_github}/releases/download/v${version}/fluffychat-linux-${_arch}.tar.gz
+ ${_raw}/LICENSE>LICENSE.txt
+ ${_raw}/LICENSES/Apache-2.0.txt
+ ${_raw}/LICENSES/CC-BY-4.0.txt
+ ${_raw}/assets/logo/vector/logo.svg"
+checksum+=" 70366abbcbe3b77f402536af9f09649319dc24ba8a92a00efa54b5b0177ae2fb
+ 074e6e32c86a4c0ef8b3ed25b721ca23aca83df277cd88106ef7177c354615ff
+ d557539df68e771cc1eedcc91d13f70fca930e508d11eedcafa4b15db49e3744
+ 1deee1646a1da0b5f05049d382dd70754faad16e93122296e6b7494f8930c114"
+skip_extraction="logo.svg"
+
+do_install() {
+	local appid=chat.fluffy.fluffychat
+	local artwork=data/flutter_assets/assets/logo/mini
+
+	vmkdir usr/lib/fluffychat
+	cp -a fluffychat data lib "${DESTDIR}/usr/lib/fluffychat/"
+	# The Linux app doesn't use the bundled Dart JNI library, which links to
+	# the build runner's JVM.
+	rm "${DESTDIR}/usr/lib/fluffychat/lib/libdartjni.so"
+	# Upstream reserves all rights to the banner and mascot. Keep their asset
+	# paths usable by substituting the CC BY 4.0 logos.
+	ln -sf logo_font_mini.png "${DESTDIR}/usr/lib/fluffychat/${artwork}/banner.png"
+	ln -sf logo_mini.png "${DESTDIR}/usr/lib/fluffychat/${artwork}/mascot.png"
+	vmkdir usr/bin
+	ln -s ../lib/fluffychat/fluffychat "${DESTDIR}/usr/bin/fluffychat"
+
+	vinstall "${FILESDIR}/${appid}.desktop" 644 usr/share/applications
+	vinstall "${XBPS_SRCDISTDIR}/${pkgname}-${version}/logo.svg" 644 \
+		usr/share/icons/hicolor/scalable/apps "${appid}.svg"
+	vlicense LICENSE.txt LICENSE
+	vlicense Apache-2.0.txt
+	vlicense CC-BY-4.0.txt
+	printf '%s\n' \
+		"Source: ${_github}/tree/v${version}" \
+		"Logo art: © 2017–present Fabiyamada, CC BY 4.0, unmodified." \
+		"${_github}/tree/v${version}/assets/logo" \
+		"Emoji verification data: Matrix Foundation, Apache 2.0." \
+		> "${DESTDIR}/usr/share/licenses/${pkgname}/ATTRIBUTION"
+}
